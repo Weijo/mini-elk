@@ -58,15 +58,7 @@ xpack.fleet.outputs:
     ca_trusted_fingerprint: 67dfaf2ec0b0035bddbca96fc2d4872fdeaef783a711749faf8a30bc3c4ee2af
     is_default: true
     is_default_monitoring: true
-  - id: fleet-second-output
-    name: custom-output
-    type: elasticsearch
-    hosts: [ https://192.168.147.134:9200 ]
-    # Set to output of 'docker-compose up tls'. Example:
-    ca_trusted_fingerprint: 67dfaf2ec0b0035bddbca96fc2d4872fdeaef783a711749faf8a30bc3c4ee2af
-    is_default: true
-    is_default_monitoring: true
-
+    
 xpack.fleet.packages:
   - name: fleet_server
     version: latest

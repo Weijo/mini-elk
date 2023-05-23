@@ -7,7 +7,7 @@ rm -rf tls/certs
 ```
 This will output the SHA fingerprint, edit `kibana/config/kibana.yml` and find `ca_trusted_fingerprint` and paste the SHA fingerprint there
 
-Edit `.env` file to change the passwords then run
+First time running or after a `docker volume prune` or if you edited `.env` file to change the passwords run this
 ```
 ./setup.sh
 ```
