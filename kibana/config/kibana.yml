@@ -47,13 +47,21 @@ server.ssl.key: config/kibana.key
 ## Fleet
 ## https://www.elastic.co/guide/en/kibana/current/fleet-settings-kb.html
 #
-xpack.fleet.agents.fleet_server.hosts: [ https://fleet-server:8220 ]
+xpack.fleet.agents.fleet_server.hosts: [ https://fleet-server:8220, https://192.168.147.134:8220 ]
 
 xpack.fleet.outputs:
   - id: fleet-default-output
     name: default
     type: elasticsearch
     hosts: [ https://elasticsearch:9200 ]
+    # Set to output of 'docker-compose up tls'. Example:
+    ca_trusted_fingerprint: 67dfaf2ec0b0035bddbca96fc2d4872fdeaef783a711749faf8a30bc3c4ee2af
+    is_default: true
+    is_default_monitoring: true
+  - id: fleet-second-output
+    name: custom-output
+    type: elasticsearch
+    hosts: [ https://192.168.147.134:9200 ]
     # Set to output of 'docker-compose up tls'. Example:
     ca_trusted_fingerprint: 67dfaf2ec0b0035bddbca96fc2d4872fdeaef783a711749faf8a30bc3c4ee2af
     is_default: true
@@ -67,6 +75,24 @@ xpack.fleet.packages:
   - name: elastic_agent
     version: latest
   - name: apm
+    version: latest
+  - name: endpoint
+    version: latest
+  - name: osquery
+    version: latest
+  - name: apache
+    version: latest
+  - name: nginx
+    version: latest
+  - name: iis
+    version: latest
+  - name: osquery_manager
+    version: latest
+  - name: pfsense
+    version: latest
+  - name: snort
+    version: latest
+  - name: suricata
     version: latest
 
 xpack.fleet.agentPolicies:
@@ -86,6 +112,7 @@ xpack.fleet.agentPolicies:
       - name: elastic_agent-1
         package:
           name: elastic_agent
+      
   - name: Agent Policy APM Server
     id: agent-policy-apm-server
     description: Static agent policy for the APM Server integration
@@ -117,3 +144,17 @@ xpack.fleet.agentPolicies:
                 value: /usr/share/elastic-agent/apm-server.crt
               - name: tls_key
                 value: /usr/share/elastic-agent/apm-server.key
+
+  - name: Endpoints
+    id: agent-policy-endpoint
+    description: Static agent policy for the Endpoints
+    monitoring_enabled:
+      - logs
+      - metrics
+    package_policies:
+      - name: system-1
+        package:
+          name: system
+      - name: elastic_agent-1
+        package:
+          name: elastic_agent
