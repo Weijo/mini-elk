@@ -33,12 +33,11 @@ Server: Docker Engine - Community
 
 # Localised ELK setup
 
-TLS certificates have been uploaded but if you want to regenerate them run
+First time setup requires you to generate them
 ```
-rm -rf tls/certs
 ./tls.sh
 ```
-This will output the SHA fingerprint, edit `kibana/config/kibana.yml` and find `ca_trusted_fingerprint` and paste the SHA fingerprint there
+This will output the SHA fingerprint, edit `kibana/config/kibana.yml`, find `ca_trusted_fingerprint` and replace the SHA fingerprint there
 
 First time running or after a `docker volume prune` or if you edited `.env` file to change the passwords run this
 ```
@@ -61,3 +60,24 @@ Note that every agent policy you create needs to specify the fleet server and ou
 
 # Agent policies
 You can either add them manually through the UI or hardcode into `kibana.yml`, I found the integration names [here](https://epr.elastic.co/search)
+
+# Enrolling agents
+add the elastic vm ip to `/etc/hosts`
+
+```
+192.168.147.138 fleet-server elasticsearch
+```
+You will need to transfer the `ca.crt` file to the agent vm. The way I did it is through python http server, run this on elastic vm
+```
+cd ~/mini-elk/tls/certs/ca
+python3 -m http.server 8000
+```
+
+then run the command, replace the `certificate-authorities` argument with the **ABSOLUTE** path to your ca.crt
+```
+wget http://fleet-server:8000/ca.crt
+curl -L -O https://artifacts.elastic.co/downloads/beats/elastic-agent/elastic-agent-8.7.1-linux-x86_64.tar.gz
+tar xzvf elastic-agent-8.7.1-linux-x86_64.tar.gz
+cd elastic-agent-8.7.1-linux-x86_64
+sudo ./elastic-agent install --url=https://fleet-server:8220 --enrollment-token=Q0NxUlRJZ0JQa0xtUzM1Q1g2aVo6dWVRZlFENTJRbHVvb3U0bUc5LV9DZw== --certificate-authorities=/home/kali/elastic-agent-8.7.1-linux-x86_64/ca.crt
+```
