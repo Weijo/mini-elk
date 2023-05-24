@@ -49,7 +49,7 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 
 # Localised ELK setup
 
-First time setup requires you to generate them
+First time setup requires you to generate the TLS certifications
 ```
 ./tls.sh
 ```
