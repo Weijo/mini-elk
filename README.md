@@ -66,8 +66,9 @@ Run the server as such
 ```
 
 # Fleet setup
-Fleet should automatically set up by itself. You will need to edit the integration settings
+Fleet should automatically set up by itself. 
 
+If you want to add a different output/fleet server:
 Left side panel go down to Fleet > click on settings > Add fleet server > put the `https://<YOUR VM IP>:8220` and continue
 
 Click on `Add output` > choose a name > type: elasticsearch (for now) > Host: `https://<YOUR VM IP>:9200`> CA trusted (found in kibana.yml) > save
