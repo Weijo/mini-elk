@@ -31,8 +31,7 @@ jobs:
           docker compose
           -f docker-compose.yml
           -f extensions/logspout/logspout-compose.yml
-          -f extensions/fleet/fleet-compose.yml
-          -f extensions/fleet/agent-apmserver-compose.yml
+          -f fleet/agent-apmserver-compose.yml
           -f extensions/metricbeat/metricbeat-compose.yml
           -f extensions/filebeat/filebeat-compose.yml
           -f extensions/heartbeat/heartbeat-compose.yml
@@ -111,7 +110,7 @@ jobs:
 
       - name: Execute Fleet test suite
         run: |
-          docker compose -f docker-compose.yml -f extensions/fleet/fleet-compose.yml -f extensions/fleet/agent-apmserver-compose.yml up --remove-orphans -d fleet-server apm-server
+          docker compose -f docker-compose.yml -f fleet/agent-apmserver-compose.yml up --remove-orphans -d fleet-server apm-server
           .github/workflows/scripts/run-tests-fleet.sh
 
       #
@@ -177,8 +176,7 @@ jobs:
           docker compose \
           -f docker-compose.yml \
           -f extensions/logspout/logspout-compose.yml \
-          -f extensions/fleet/fleet-compose.yml \
-          -f extensions/fleet/agent-apmserver-compose.yml \
+          -f fleet/agent-apmserver-compose.yml \
           -f extensions/metricbeat/metricbeat-compose.yml \
           -f extensions/filebeat/filebeat-compose.yml \
           -f extensions/heartbeat/heartbeat-compose.yml \
@@ -188,8 +186,7 @@ jobs:
           docker compose \
           -f docker-compose.yml \
           -f extensions/logspout/logspout-compose.yml \
-          -f extensions/fleet/fleet-compose.yml \
-          -f extensions/fleet/agent-apmserver-compose.yml \
+          -f fleet/agent-apmserver-compose.yml \
           -f extensions/metricbeat/metricbeat-compose.yml \
           -f extensions/filebeat/filebeat-compose.yml \
           -f extensions/heartbeat/heartbeat-compose.yml \
@@ -217,8 +214,7 @@ jobs:
           docker compose
           -f docker-compose.yml
           -f extensions/logspout/logspout-compose.yml
-          -f extensions/fleet/fleet-compose.yml
-          -f extensions/fleet/agent-apmserver-compose.yml
+          -f fleet/agent-apmserver-compose.yml
           -f extensions/metricbeat/metricbeat-compose.yml
           -f extensions/filebeat/filebeat-compose.yml
           -f extensions/heartbeat/heartbeat-compose.yml

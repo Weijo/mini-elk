@@ -13,7 +13,7 @@ version: '3.7'
 services:
   apm-server:
     build:
-      context: extensions/fleet/
+      context: fleet/
       args:
         ELASTIC_VERSION: ${ELASTIC_VERSION}
     volumes:
