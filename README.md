@@ -31,6 +31,8 @@ Server: Docker Engine - Community
   GitCommit:        de40ad0
 ```
 
+Follow the steps [here](https://docs.docker.com/engine/install/ubuntu/)
+
 # Localised ELK setup
 
 First time setup requires you to generate them
