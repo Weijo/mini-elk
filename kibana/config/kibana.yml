@@ -47,7 +47,7 @@ server.ssl.key: config/kibana.key
 ## Fleet
 ## https://www.elastic.co/guide/en/kibana/current/fleet-settings-kb.html
 #
-xpack.fleet.agents.fleet_server.hosts: [ https://fleet-server:8220, https://192.168.147.134:8220 ]
+xpack.fleet.agents.fleet_server.hosts: [ https://fleet-server:8220 ]
 
 xpack.fleet.outputs:
   - id: fleet-default-output
@@ -55,10 +55,10 @@ xpack.fleet.outputs:
     type: elasticsearch
     hosts: [ https://elasticsearch:9200 ]
     # Set to output of 'docker-compose up tls'. Example:
-    ca_trusted_fingerprint: 67dfaf2ec0b0035bddbca96fc2d4872fdeaef783a711749faf8a30bc3c4ee2af
+    ca_trusted_fingerprint: 042a447e4d9515598424bd03d7dac3c447af8dfd97b596d183a5b898528f0e95
     is_default: true
     is_default_monitoring: true
-    
+
 xpack.fleet.packages:
   - name: fleet_server
     version: latest
@@ -104,7 +104,6 @@ xpack.fleet.agentPolicies:
       - name: elastic_agent-1
         package:
           name: elastic_agent
-      
   - name: Agent Policy APM Server
     id: agent-policy-apm-server
     description: Static agent policy for the APM Server integration
@@ -136,7 +135,6 @@ xpack.fleet.agentPolicies:
                 value: /usr/share/elastic-agent/apm-server.crt
               - name: tls_key
                 value: /usr/share/elastic-agent/apm-server.key
-
   - name: Endpoints
     id: agent-policy-endpoint
     description: Static agent policy for the Endpoints
