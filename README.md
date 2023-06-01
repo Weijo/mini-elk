@@ -65,6 +65,12 @@ Run the server as such
 ./run.sh
 ```
 
+Regenerate the xpack encryption keys since they're shown publically
+```bash
+sudo docker container run --rm docker.elastic.co/kibana/kibana:8.7.1 bin/kibana-encryption-keys generate
+```
+
+
 # Fleet setup
 Fleet should automatically set up by itself. 
 
@@ -98,3 +104,6 @@ tar xzvf elastic-agent-8.7.1-linux-x86_64.tar.gz
 cd elastic-agent-8.7.1-linux-x86_64
 sudo ./elastic-agent install --url=https://fleet-server:8220 --enrollment-token=Q0NxUlRJZ0JQa0xtUzM1Q1g2aVo6dWVRZlFENTJRbHVvb3U0bUc5LV9DZw== --certificate-authorities=/home/kali/elastic-agent-8.7.1-linux-x86_64/ca.crt
 ```
+
+# Custom logging
+Refer to [Custom-Logging.md](./Custom-Logging.md)
