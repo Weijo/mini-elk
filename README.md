@@ -65,7 +65,7 @@ Run the server as such
 ./run.sh
 ```
 
-Regenerate the xpack encryption keys since they're shown publically. The keys are needed for Elastic security Alerts to load/work
+Regenerate the xpack encryption keys when used in production as they're shown publically. The keys are needed for Elastic security Alerts to load/work
 ```bash
 sudo docker container run --rm docker.elastic.co/kibana/kibana:8.7.1 bin/kibana-encryption-keys generate
 ```
