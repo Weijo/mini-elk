@@ -70,7 +70,13 @@ Regenerate the xpack encryption keys when used in production as they're shown pu
 sudo docker container run --rm docker.elastic.co/kibana/kibana:8.7.1 bin/kibana-encryption-keys generate
 ```
 
-
+If your fleet server is not alive, you can try pruning the containers and volumes then run `setup.sh` and `run.sh` again
+```bash
+sudo docker container prune -a
+sudo docker volume prune -a
+./setup.sh
+./run.sh
+```
 # Fleet setup
 Fleet should automatically set up by itself. 
 
