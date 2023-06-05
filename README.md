@@ -102,13 +102,13 @@ cd ~/mini-elk/tls/certs/ca
 python3 -m http.server 8000
 ```
 
-then run the command, replace the `certificate-authorities` argument with the **ABSOLUTE** path to your ca.crt
+then run the command below, replace the `enrollment-token` and the `certificate-authorities` argument with the **ABSOLUTE** path to your ca.crt
 ```
-wget http://fleet-server:8000/ca.crt
 curl -L -O https://artifacts.elastic.co/downloads/beats/elastic-agent/elastic-agent-8.7.1-linux-x86_64.tar.gz
 tar xzvf elastic-agent-8.7.1-linux-x86_64.tar.gz
 cd elastic-agent-8.7.1-linux-x86_64
-sudo ./elastic-agent install --url=https://fleet-server:8220 --enrollment-token=Q0NxUlRJZ0JQa0xtUzM1Q1g2aVo6dWVRZlFENTJRbHVvb3U0bUc5LV9DZw== --certificate-authorities=/home/kali/elastic-agent-8.7.1-linux-x86_64/ca.crt
+wget http://fleet-server:8000/ca.crt
+sudo ./elastic-agent install --url=https://fleet-server:8220 --enrollment-token=<CHANGEME> --certificate-authorities=/path/to/the/ca.crt
 ```
 
 # Custom logging
