@@ -108,7 +108,8 @@ curl -L -O https://artifacts.elastic.co/downloads/beats/elastic-agent/elastic-ag
 tar xzvf elastic-agent-8.7.1-linux-x86_64.tar.gz
 cd elastic-agent-8.7.1-linux-x86_64
 wget http://fleet-server:8000/ca.crt
-sudo ./elastic-agent install --url=https://fleet-server:8220 --enrollment-token=<CHANGEME> --certificate-authorities=/path/to/the/ca.crt
+caPath=$(pwd)
+sudo ./elastic-agent install --url=https://fleet-server:8220 --enrollment-token=<CHANGEME> --certificate-authorities=$caPath/ca.crt
 ```
 
 # Custom logging
