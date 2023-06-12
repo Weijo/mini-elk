@@ -10,6 +10,9 @@ test:
 run:
 	sudo docker compose -f docker-compose.yml up -d
 
+stop:
+	sudo docker compose down
+
 ps:
 	sudo docker compose ps
 
