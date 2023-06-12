@@ -1,4 +1,5 @@
 # Requirements
+Mini-elk was tested on Ubuntu 23.04 (Live and destkop)
 
 You need docker and docker-compose. Docker has to have the docker-init plugin
 ```
@@ -48,21 +49,32 @@ sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin 
 ```
 
 # Localised ELK setup
+I placed the various docker commands into a [Makefile](./Makefile)
 
 First time setup requires you to generate the TLS certifications
 ```
-./tls.sh
+make certs
 ```
 This will output the SHA fingerprint, edit `kibana/config/kibana.yml`, find `ca_trusted_fingerprint` and replace the SHA fingerprint there
 
 First time running or after a `docker volume prune` or if you edited `.env` file to change the passwords run this
 ```
-./setup.sh
+make setup
 ```
 
-Run the server as such
+Run the server as daemon
 ```
-./run.sh
+make run
+```
+
+Run the server without daemon (for testing)
+```
+make test
+```
+
+Check docker ps
+```
+make ps
 ```
 
 Regenerate the xpack encryption keys when used in production as they're shown publically. The keys are needed for Elastic security Alerts to load/work
@@ -70,12 +82,9 @@ Regenerate the xpack encryption keys when used in production as they're shown pu
 sudo docker container run --rm docker.elastic.co/kibana/kibana:8.7.1 bin/kibana-encryption-keys generate
 ```
 
-If your fleet server is not alive, you can try pruning the containers and volumes then run `setup.sh` and `run.sh` again
+If your fleet server is not alive, you can try pruning the containers and volumes then run `setup` and `run` again 
 ```bash
-sudo docker container prune
-sudo docker volume prune -a
-./setup.sh
-./run.sh
+make reset
 ```
 # Fleet setup
 Fleet should automatically set up by itself. 
