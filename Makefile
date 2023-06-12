@@ -1,4 +1,4 @@
-setup:
+set:
 	sudo docker compose up setup
 
 certs:
@@ -17,4 +17,4 @@ prune:
 	sudo docker container prune
 	sudo docker volume prune -a
 
-reset: prune setup run
+reset: prune set run

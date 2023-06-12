@@ -60,7 +60,7 @@ This will output the SHA fingerprint, edit `kibana/config/kibana.yml`, find `ca_
 
 First time running or after a `docker volume prune` or if you edited `.env` file to change the passwords run this
 ```
-make setup
+make set
 ```
 
 Run the server as daemon
@@ -83,7 +83,7 @@ Regenerate the xpack encryption keys when used in production as they're shown pu
 sudo docker container run --rm docker.elastic.co/kibana/kibana:8.7.1 bin/kibana-encryption-keys generate
 ```
 
-If your fleet server is not alive, you can try pruning the containers and volumes then run `setup` and `run` again 
+If your fleet server is not alive, you can try pruning the containers and volumes then run `set` and `run` again 
 ```bash
 make reset
 ```
