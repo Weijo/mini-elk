@@ -1,0 +1,36 @@
+PUT _ilm/policy/pfelk
+{
+  "policy": {
+    "phases": {
+      "hot": {
+        "min_age": "0ms",
+        "actions": {
+          "rollover": {
+            "max_age": "30d",
+            "max_primary_shard_size": "50gb"
+          }
+        }
+      },
+      "warm": {
+        "min_age": "60d",
+        "actions": {
+          "set_priority": {
+            "priority": 50
+          }
+        }
+      },
+      "cold": {
+        "min_age": "92d",
+        "actions": {
+          "set_priority": {
+            "priority": 0
+          }
+        }
+      }
+    },
+    "_meta": {
+      "managed": true,
+      "description": "default policy for the pfelk index templates installed by pfelk"
+    }
+  }
+}
