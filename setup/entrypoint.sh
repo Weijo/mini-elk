@@ -12,6 +12,7 @@ source "${BASH_SOURCE[0]%/*}"/lib.sh
 declare -A users_passwords
 users_passwords=(
 	[logstash_internal]="${LOGSTASH_INTERNAL_PASSWORD:-}"
+	[logstash_system]="${LOGSTASH_SYSTEM_PASSWORD:-}"
 	[kibana_system]="${KIBANA_SYSTEM_PASSWORD:-}"
 	[metricbeat_internal]="${METRICBEAT_INTERNAL_PASSWORD:-}"
 	[filebeat_internal]="${FILEBEAT_INTERNAL_PASSWORD:-}"
