@@ -20,7 +20,7 @@ ps:
 	sudo docker compose ps
 
 prune:
-	sudo docker container prune
-	sudo docker volume prune -a
+	sudo docker container prune -f
+	sudo docker volume prune -a -f 
 
 reset: prune set run

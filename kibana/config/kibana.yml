@@ -91,6 +91,8 @@ xpack.fleet.packages:
     version: latest
   - name: docker
     version: latest
+  - name: windows
+    version: latest
 
 xpack.fleet.agentPolicies:
   - name: Fleet Server Policy
@@ -153,9 +155,9 @@ xpack.fleet.agentPolicies:
       - name: elastic_agent-1
         package:
           name: elastic_agent
-  - name: Endpoints
-    id: endpoint-policy
-    description: Static agent policy for the Endpoints
+  - name: Corporate Endpoints
+    id: corporate-endpoint-policy
+    description: Static agent policy for the Corporate Endpoints
     monitoring_enabled:
       - logs
       - metrics
@@ -166,6 +168,12 @@ xpack.fleet.agentPolicies:
       - name: elastic_agent-1
         package:
           name: elastic_agent
+      - name: osquery-1
+        package:
+          name: osquery_manager
+      - name: windows-1
+        package;
+          name: windows
   - name: Webserver
     id: webserver-policy
     description: Static agent policy for the Webserver
@@ -185,3 +193,38 @@ xpack.fleet.agentPolicies:
       - name: docker-1
         package:
           name: docker
+      - name: osquery-1
+        package:
+          name: osquery_manager
+  - name: LimeSurvey
+    id: limesurvey-policy
+    description: Static agent policy for LimeSurvey
+    monitoring_enabled:
+      - logs
+      - metrics
+    package_policies:
+      - name: system-1
+        package:
+          name: system
+      - name: elastic_agent-1
+        package:
+          name: elastic_agent
+      - name: apache-1
+        package:
+          name: apache
+      - name: osquery-1
+        package:
+          name: osquery_manager
+  - name: ctfd
+    id: ctfd-policy
+    description: Static agent policy for the CTFd server
+    monitoring_enabled:
+      - logs
+      - metrics
+    package_policies:
+      - name: system-1
+        package:
+          name: system
+      - name: elastic_agent-1
+        package:
+          name: elastic_agent
