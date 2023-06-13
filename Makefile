@@ -10,7 +10,7 @@ test:
 run:
 	sudo docker compose -f docker-compose.yml up -d
 
-stop:
+down:
 	sudo docker compose down
 
 build:
