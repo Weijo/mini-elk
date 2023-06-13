@@ -100,6 +100,9 @@ Note that every agent policy you create needs to specify the fleet server and ou
 # Agent policies
 You can either add them manually through the UI or hardcode into `kibana.yml`, I found the integration names [here](https://epr.elastic.co/search)
 
+Writing the policies is really hard as there are barely any examples but if you search for `manifest.yml` in `elastic/integration` repo there are some examples you can follow
+https://github.com/search?q=repo%3Aelastic%2Fintegrations+manifest.yml&type=code
+
 # Enrolling agents
 add the elastic vm ip to `/etc/hosts`
 
