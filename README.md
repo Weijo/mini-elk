@@ -126,6 +126,5 @@ sudo ./elastic-agent install --url=https://fleet-server:8220 --enrollment-token=
 Refer to [Custom-Logging.md](./Custom-Logging.md)
 
 # Credits
-
-Docker-elk - https://github.com/deviantony/docker-elk
-pfelk - https://github.com/pfelk/pfelk
+- Docker-elk - https://github.com/deviantony/docker-elk
+- pfelk - https://github.com/pfelk/pfelk
