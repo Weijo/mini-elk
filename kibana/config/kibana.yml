@@ -172,7 +172,7 @@ xpack.fleet.agentPolicies:
         package:
           name: osquery_manager
       - name: windows-1
-        package;
+        package:
           name: windows
   - name: Webserver
     id: webserver-policy
