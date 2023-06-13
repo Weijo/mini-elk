@@ -58,7 +58,7 @@ xpack.fleet.outputs:
     type: elasticsearch
     hosts: [ https://elasticsearch:9200 ]
     # Set to output of 'docker-compose up tls'. Example:
-    ca_trusted_fingerprint: 042a447e4d9515598424bd03d7dac3c447af8dfd97b596d183a5b898528f0e95
+    ca_trusted_fingerprint: PLEASEDONTREPLACEMEIHAVEABANDONMENTISSUES
     is_default: true
     is_default_monitoring: true
 
