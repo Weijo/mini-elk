@@ -1,7 +1,7 @@
 # Requirements
 Mini-elk was tested on Ubuntu 23.04 (Live and destkop)
 
-You need docker and docker-compose. Docker has to have the docker-init plugin
+You need make, docker and docker-compose. Docker has to have the docker-init plugin
 ```
 Client: Docker Engine - Community
  Version:           24.0.1
@@ -36,7 +36,7 @@ Follow the steps [here](https://docs.docker.com/engine/install/ubuntu/)
 
 ```
 sudo apt-get update
-sudo apt-get install ca-certificates curl gnupg
+sudo apt-get install ca-certificates curl gnupg -y
 sudo install -m 0755 -d /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 sudo chmod a+r /etc/apt/keyrings/docker.gpg
@@ -45,7 +45,8 @@ echo \
   "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" | \
   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 sudo apt-get update
-sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
+sudo apt-get install make -y
 ```
 
 # Localised ELK setup
@@ -59,7 +60,7 @@ This will output the SHA fingerprint, edit `kibana/config/kibana.yml`, find `ca_
 
 First time running or after a `docker volume prune` or if you edited `.env` file to change the passwords run this
 ```
-make setup
+make set
 ```
 
 Run the server as daemon
@@ -82,7 +83,7 @@ Regenerate the xpack encryption keys when used in production as they're shown pu
 sudo docker container run --rm docker.elastic.co/kibana/kibana:8.7.1 bin/kibana-encryption-keys generate
 ```
 
-If your fleet server is not alive, you can try pruning the containers and volumes then run `setup` and `run` again 
+If your fleet server is not alive, you can try pruning the containers and volumes then run `set` and `run` again 
 ```bash
 make reset
 ```
@@ -123,3 +124,8 @@ sudo ./elastic-agent install --url=https://fleet-server:8220 --enrollment-token=
 
 # Custom logging
 Refer to [Custom-Logging.md](./Custom-Logging.md)
+
+# Credits
+
+Docker-elk - https://github.com/deviantony/docker-elk
+pfelk - https://github.com/pfelk/pfelk
