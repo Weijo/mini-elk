@@ -13,6 +13,9 @@ run:
 stop:
 	sudo docker compose down
 
+build:
+	sudo docker compose build
+
 ps:
 	sudo docker compose ps
 
