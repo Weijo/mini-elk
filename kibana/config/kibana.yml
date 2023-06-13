@@ -183,5 +183,5 @@ xpack.fleet.agentPolicies:
         package:
           name: apache
       - name: docker-1
-        package
+        package:
           name: docker
