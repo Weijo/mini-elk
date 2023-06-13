@@ -89,6 +89,8 @@ xpack.fleet.packages:
     version: latest
   - name: suricata
     version: latest
+  - name: docker
+    version: latest
 
 xpack.fleet.agentPolicies:
   - name: Fleet Server Policy
@@ -151,6 +153,19 @@ xpack.fleet.agentPolicies:
       - name: elastic_agent-1
         package:
           name: elastic_agent
+  - name: Endpoints
+    id: endpoint-policy
+    description: Static agent policy for the Endpoints
+    monitoring_enabled:
+      - logs
+      - metrics
+    package_policies:
+      - name: system-1
+        package:
+          name: system
+      - name: elastic_agent-1
+        package:
+          name: elastic_agent
   - name: Webserver
     id: webserver-policy
     description: Static agent policy for the Webserver
@@ -168,5 +183,5 @@ xpack.fleet.agentPolicies:
         package:
           name: apache
       - name: docker-1
-        package:
+        package
           name: docker
