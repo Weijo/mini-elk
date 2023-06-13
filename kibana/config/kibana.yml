@@ -139,7 +139,7 @@ xpack.fleet.agentPolicies:
               - name: tls_key
                 value: /usr/share/elastic-agent/apm-server.key
   - name: Endpoints
-    id: agent-policy-endpoint
+    id: endpoint-policy
     description: Static agent policy for the Endpoints
     monitoring_enabled:
       - logs
@@ -151,3 +151,22 @@ xpack.fleet.agentPolicies:
       - name: elastic_agent-1
         package:
           name: elastic_agent
+  - name: Webserver
+    id: webserver-policy
+    description: Static agent policy for the Webserver
+    monitoring_enabled:
+      - logs
+      - metrics
+    package_policies:
+      - name: system-1
+        package:
+          name: system
+      - name: elastic_agent-1
+        package:
+          name: elastic_agent
+      - name: apache-1
+        package:
+          name: apache
+      - name: docker-1
+        package:
+          name: docker
