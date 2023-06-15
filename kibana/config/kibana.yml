@@ -58,7 +58,7 @@ xpack.fleet.outputs:
     type: elasticsearch
     hosts: [ https://elasticsearch:9200 ]
     # Set to output of 'docker-compose up tls'. Example:
-    ca_trusted_fingerprint: 042a447e4d9515598424bd03d7dac3c447af8dfd97b596d183a5b898528f0e95
+    ca_trusted_fingerprint: PLEASEDONTREPLACEMEIHAVEABANDONMENTISSUES
     is_default: true
     is_default_monitoring: true
 
@@ -88,6 +88,10 @@ xpack.fleet.packages:
   - name: snort
     version: latest
   - name: suricata
+    version: latest
+  - name: docker
+    version: latest
+  - name: windows
     version: latest
 
 xpack.fleet.agentPolicies:
@@ -139,7 +143,7 @@ xpack.fleet.agentPolicies:
               - name: tls_key
                 value: /usr/share/elastic-agent/apm-server.key
   - name: Endpoints
-    id: agent-policy-endpoint
+    id: endpoint-policy
     description: Static agent policy for the Endpoints
     monitoring_enabled:
       - logs
@@ -151,3 +155,90 @@ xpack.fleet.agentPolicies:
       - name: elastic_agent-1
         package:
           name: elastic_agent
+  - name: Corporate Endpoints
+    id: corporate-endpoint-policy
+    description: Static agent policy for the Corporate Endpoints
+    monitoring_enabled:
+      - logs
+      - metrics
+    package_policies:
+      - name: system-1
+        package:
+          name: system
+      - name: elastic_agent-1
+        package:
+          name: elastic_agent
+      - name: osquery-1
+        package:
+          name: osquery_manager
+      - name: windows-1
+        package:
+          name: windows
+  - name: Webserver
+    id: webserver-policy
+    description: Static agent policy for the Webserver
+    monitoring_enabled:
+      - logs
+      - metrics
+    package_policies:
+      - name: system-1
+        package:
+          name: system
+      - name: elastic_agent-1
+        package:
+          name: elastic_agent
+      - name: apache-1
+        package:
+          name: apache
+      - name: docker-1
+        package:
+          name: docker
+      - name: osquery-1
+        package:
+          name: osquery_manager
+  - name: LimeSurvey
+    id: limesurvey-policy
+    description: Static agent policy for LimeSurvey
+    monitoring_enabled:
+      - logs
+      - metrics
+    package_policies:
+      - name: system-1
+        package:
+          name: system
+      - name: elastic_agent-1
+        package:
+          name: elastic_agent
+      - name: apache-1
+        package:
+          name: apache
+      - name: osquery-1
+        package:
+          name: osquery_manager
+  - name: ctfd
+    id: ctfd-policy
+    description: Static agent policy for the CTFd server
+    monitoring_enabled:
+      - logs
+      - metrics
+    package_policies:
+      - name: system-1
+        package:
+          name: system
+      - name: elastic_agent-1
+        package:
+          name: elastic_agent
+  - name: kali
+    id: kali-policy
+    description: Static agent policy for the kali instances
+    monitoring_enabled:
+      - logs
+      - metrics
+    package_policies:
+      - name: system-1
+        package:
+          name: system
+      - name: elastic_agent-1
+        package:
+          name: elastic_agent
+

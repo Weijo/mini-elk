@@ -66,7 +66,8 @@ services:
     networks:
       - elk
     depends_on:
-      - elasticsearch
+      elasticsearch:
+        condition: service_healthy
 
   elasticsearch:
     build:
@@ -96,8 +97,20 @@ services:
     networks:
       - elk
     restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -s --cacert /usr/share/elasticsearch/config/ca.crt https://localhost:9200 | grep -q 'missing authentication credentials'",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 120
 
   logstash:
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
     build:
       context: logstash/
       args:
@@ -127,11 +140,12 @@ services:
       LOGSTASH_SYSTEM_PASSWORD: ${LOGSTASH_SYSTEM_PASSWORD:-}
     networks:
       - elk
-    depends_on:
-      - elasticsearch
     restart: unless-stopped
 
   kibana:
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
     build:
       context: kibana/
       args:
@@ -148,11 +162,23 @@ services:
       KIBANA_SYSTEM_PASSWORD: ${KIBANA_SYSTEM_PASSWORD:-}
     networks:
       - elk
-    depends_on:
-      - elasticsearch
     restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -s --cacert /usr/share/kibana/config/ca.crt -I https://localhost:5601 | grep -q 'HTTP/1.1 302 Found'",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 120
 
   fleet-server:
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+      kibana:
+        condition: service_healthy
     build:
       context: fleet/
       args:
@@ -174,6 +200,7 @@ services:
       ELASTICSEARCH_CA: /usr/share/elastic-agent/ca.crt
       # Fleet plugin in Kibana
       KIBANA_FLEET_SETUP: '1'
+      KIBANA_FLEET_HOST: 'https://kibana:5601'
       # Enrollment.
       # (a) Auto-enroll using basic authentication
       ELASTICSEARCH_USERNAME: elastic
@@ -187,9 +214,7 @@ services:
     restart: on-failure
     networks:
       - elk
-    depends_on:
-      - elasticsearch
-      - kibana
+
 networks:
   elk:
     driver: bridge

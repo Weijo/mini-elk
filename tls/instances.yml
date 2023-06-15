@@ -16,6 +16,7 @@ instances:
   dns:
   - kibana.127.0.0.1.nip.io    # Examples of resolvable domains.
   - kibana.127.0.0.1.sslip.io  #
+  - kibana
   - localhost
   ip:
   - 127.0.0.1
