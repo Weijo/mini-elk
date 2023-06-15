@@ -25,7 +25,7 @@ services:
       - ./tls/instances.yml:/usr/share/elasticsearch/tls/instances.yml:ro,Z
       - ./tls/certs:/usr/share/elasticsearch/tls/certs:z
     healthcheck:
-      test: ["CMD-SHELL", "[ -f tks/certs/ca/ca.crt ]"]
+      test: ["CMD-SHELL", "[ -f tls/certs/ca/ca.crt ]"]
       interval: 1s
       timeout: 5s
       retries: 120
@@ -71,12 +71,8 @@ services:
     networks:
       - elk
     depends_on:
-      - elasticsearch
-    healthcheck:
-      test: ["CMD-SHELL", "[ -f tks/certs/ca/ca.crt ]"]
-      interval: 1s
-      timeout: 5s
-      retries: 120
+      elasticsearch:
+        condition: service_healthy
 
   elasticsearch:
     depends_on:
@@ -186,6 +182,11 @@ services:
       retries: 120
 
   fleet-server:
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+      kibana:
+        condition: service_healthy
     build:
       context: fleet/
       args:
@@ -221,12 +222,7 @@ services:
     restart: on-failure
     networks:
       - elk
-    depends_on:
-      elasticsearch:
-        condition: service_healthy
-      kibana:
-        condition: service_healthy
-        
+
 networks:
   elk:
     driver: bridge
