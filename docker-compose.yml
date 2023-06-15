@@ -24,6 +24,11 @@ services:
       - ./tls/entrypoint.sh:/entrypoint.sh:ro,Z
       - ./tls/instances.yml:/usr/share/elasticsearch/tls/instances.yml:ro,Z
       - ./tls/certs:/usr/share/elasticsearch/tls/certs:z
+    healthcheck:
+      test: ["CMD-SHELL", "[ -f tks/certs/ca/ca.crt ]"]
+      interval: 1s
+      timeout: 5s
+      retries: 120
 
   # The 'setup' service runs a one-off script which initializes users inside
   # Elasticsearch — such as 'logstash_internal' and 'kibana_system' — with the
@@ -67,8 +72,16 @@ services:
       - elk
     depends_on:
       - elasticsearch
+    healthcheck:
+      test: ["CMD-SHELL", "[ -f tks/certs/ca/ca.crt ]"]
+      interval: 1s
+      timeout: 5s
+      retries: 120
 
   elasticsearch:
+    depends_on:
+      tls:
+        condition: service_healthy
     build:
       context: elasticsearch/
       args:
@@ -96,8 +109,20 @@ services:
     networks:
       - elk
     restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -s --cacert tls/certs/ca/ca.crt https://localhost:9200 | grep -q 'missing authentication credentials'",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 120
 
   logstash:
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
     build:
       context: logstash/
       args:
@@ -127,11 +152,12 @@ services:
       LOGSTASH_SYSTEM_PASSWORD: ${LOGSTASH_SYSTEM_PASSWORD:-}
     networks:
       - elk
-    depends_on:
-      - elasticsearch
     restart: unless-stopped
 
   kibana:
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
     build:
       context: kibana/
       args:
@@ -148,9 +174,16 @@ services:
       KIBANA_SYSTEM_PASSWORD: ${KIBANA_SYSTEM_PASSWORD:-}
     networks:
       - elk
-    depends_on:
-      - elasticsearch
     restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -s -I http://localhost:5601 | grep -q 'HTTP/1.1 302 Found'",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 120
 
   fleet-server:
     build:
@@ -189,8 +222,11 @@ services:
     networks:
       - elk
     depends_on:
-      - elasticsearch
-      - kibana
+      elasticsearch:
+        condition: service_healthy
+      kibana:
+        condition: service_healthy
+        
 networks:
   elk:
     driver: bridge
