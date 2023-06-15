@@ -24,11 +24,6 @@ services:
       - ./tls/entrypoint.sh:/entrypoint.sh:ro,Z
       - ./tls/instances.yml:/usr/share/elasticsearch/tls/instances.yml:ro,Z
       - ./tls/certs:/usr/share/elasticsearch/tls/certs:z
-    healthcheck:
-      test: ["CMD-SHELL", "[ -f tls/certs/ca/ca.crt ]"]
-      interval: 1s
-      timeout: 5s
-      retries: 120
 
   # The 'setup' service runs a one-off script which initializes users inside
   # Elasticsearch — such as 'logstash_internal' and 'kibana_system' — with the
@@ -70,14 +65,8 @@ services:
       BEATS_SYSTEM_PASSWORD: ${BEATS_SYSTEM_PASSWORD:-}
     networks:
       - elk
-    depends_on:
-      elasticsearch:
-        condition: service_healthy
 
   elasticsearch:
-    depends_on:
-      tls:
-        condition: service_healthy
     build:
       context: elasticsearch/
       args:
