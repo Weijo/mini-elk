@@ -3,8 +3,7 @@ set:
 
 certs:
 	sudo docker compose up tls
-	FINGERPRINT=`openssl x509 -fingerprint -sha256 -noout -in tls/certs/ca/ca.crt | awk -F"=" {' print $2 '} | sed s/://g`
-	sed -i "s?PLEASEDONTREPLACEMEIHAVEABANDONMENTISSUES?${FINGERPRINT}?" ./kibana/config/kibana.yml
+	sed -i "s?PLEASEDONTREPLACEMEIHAVEABANDONMENTISSUES?`openssl x509 -fingerprint -sha256 -noout -in tls/certs/ca/ca.crt | awk -F"=" {' print $2 '} | sed s/://g`?" ./kibana/config/kibana.yml
 
 test:
 	sudo docker compose -f docker-compose.yml up
