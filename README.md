@@ -1,4 +1,4 @@
-# Requirements
+![image](https://github.com/Weijo/mini-elk/assets/39800664/56dcb63f-c1a8-4ea9-9244-fef285fb2c86)# Requirements
 Mini-elk was tested on Ubuntu 23.04 (Live and destkop)
 
 You need make, docker and docker-compose. Docker has to have the docker-init plugin
@@ -133,3 +133,19 @@ Refer to [Custom-Logging.md](./Custom-Logging.md)
 # Credits
 - Docker-elk - https://github.com/deviantony/docker-elk
 - pfelk - https://github.com/pfelk/pfelk
+
+# Fleet dying
+When you turn off the VM and turn it on after a while, you may notice the fleet-server or other agents being dead.
+
+Checking the logs will show something like this:
+```
+"message":"Error fetching data for metricset beat.state: error making http request: Get "http://unix/state/": dial unix /usr/share/elastic-agent/state/data/tmp/fleet-server-default.sock: connect: no such file or directory"
+```
+
+When this happens, try to go into the affected elastic agent server and restart elastic-agent. E.g
+```
+sudo docker exec -it mini-elk-fleet-server-1 /bin/bash
+elastic-agent restart
+```
+
+ 
