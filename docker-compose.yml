@@ -51,6 +51,8 @@ services:
       - ./setup/entrypoint.sh:/entrypoint.sh:ro,Z
       - ./setup/lib.sh:/lib.sh:ro,Z
       - ./setup/roles:/roles:ro,Z
+      - ./setup/pipelines:/pipelines:ro,Z
+      - ./setup/pfelk_templates:/pfelk_templates:ro,Z
       # (!) CA certificate. Generate using the 'tls' service.
       - ./tls/certs/ca/ca.crt:/ca.crt:ro,z
     environment:

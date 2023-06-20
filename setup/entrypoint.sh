@@ -42,6 +42,29 @@ roles_files=(
 )
 
 # --------------------------------------------------------
+# Pipelines declarations
+
+declare -A pipeline_files
+pipeline_files=(
+	[kali.commandhistory]='kali_commandhistory.json'
+	[ctfd.submissions]='ctfd_submissions.json'
+	[ctfd.registrations]='ctfd_registrations.json'
+	[ctfd.logins]='ctfd_logins.json'
+)
+
+# --------------------------------------------------------
+# pfELK templates declarations
+
+declare -A pfelk_templates
+pfelk_templates=(
+	[pfelk-mappings-ecs]='_component_template'
+	[pfelk-ilm]='_ilm/policy'
+	[pfelk]='_index_template'
+	[pfelk-dhcp]='_index_template'
+	[pfelk-suricata]='_index_template'
+)
+
+# --------------------------------------------------------
 
 
 log 'Waiting for availability of Elasticsearch. This can take several minutes.'
@@ -117,4 +140,38 @@ for user in "${!users_passwords[@]}"; do
 		sublog 'User does not exist, creating'
 		create_user "$user" "${users_passwords[$user]}" "${users_roles[$user]}"
 	fi
+done
+
+# Add in ingest pipelines
+log 'Adding ingest pipelines'
+
+for pipeline in "${!pipeline_files[@]}"; do
+	log "Pipeline '$pipeline'"
+
+	declare body_file2
+	body_file2="${BASH_SOURCE[0]%/*}/pipelines/${pipeline_files[$pipeline]:-}"
+	if [[ ! -f "${body_file2:-}" ]]; then
+		sublog "No pipeline body found at '${body_file2}', skipping"
+		continue
+	fi
+
+	sublog 'Creating'
+	add_pipeline "$pipeline" "$(<"${body_file2}")"
+done
+
+# Add pfelk templates
+log 'Adding pfelk templates'
+
+for template in "${!pfelk_templates[@]}"; do
+	log "Template '$template'"
+
+	declare filename
+	filename="${BASH_SOURCE[0]%/*}/pfelk_templates/${template}.json"
+	if [[ ! -f "${filename:-}" ]]; then
+		sublog "No pipeline body found at '${filename}', skipping"
+		continue
+	fi
+
+	sublog 'Creating'
+	install_pfelk "$template" "${filename}" "${pfelk_templates[$template]:-}"
 done

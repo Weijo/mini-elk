@@ -23,5 +23,9 @@ ps:
 prune:
 	sudo docker container prune -f
 	sudo docker volume prune -a -f 
+	sudo docker network prune -f
 
 reset: prune set run
+
+fileshare:
+	sudo python3 -m http.server 8000 --directory ./tls/certs/ca/
