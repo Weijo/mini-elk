@@ -296,7 +296,7 @@ function install_pfelk {
 		'--resolve' "elasticsearch:9200:${elasticsearch_host}" '--cacert' "$es_ca_cert"
 		'-X' 'PUT'
 		'-H' 'Content-Type: application/json'
-		'-d' -d "@/${filename}"
+		'-d' "@/${filename}"
 		)
 
 	if [[ -n "${ELASTIC_PASSWORD:-}" ]]; then
