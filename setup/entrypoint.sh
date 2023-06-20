@@ -118,3 +118,96 @@ for user in "${!users_passwords[@]}"; do
 		create_user "$user" "${users_passwords[$user]}" "${users_roles[$user]}"
 	fi
 done
+
+# Add in ingest pipelines
+log 'Adding Ingest pipelines'
+
+es_ca_cert="${BASH_SOURCE[0]%/*}"/ca.crt
+
+curl -X PUT "https://elasticsearch:9200/_ingest/pipeline/kali.commandhistory?pretty" -u "elastic:${ELASTIC_PASSWORD}" --cacert "$es_ca_cert" -H 'Content-Type: application/json' -d'
+{
+  "description": "Parsing for kali logs",
+  "processors": [
+    {
+      "grok": {
+        "field": "message",
+        "patterns": [
+          "%{TIMESTAMP_ISO8601:timestamp} %{DATA:name1} %{DATA:name2}: {\"user\": \"%{DATA:users}\", \"path\": \"%{DATA:path}\", \"pid\": \"%{NUMBER:pid}\",\"original_command\": \"%{DATA:original_command}\", \"status\": \"%{NUMBER:status}\"}"
+        ]
+      }
+    }
+  ]
+}
+'
+
+curl -X PUT "https://elasticsearch:9200/_ingest/pipeline/ctfd-submission?pretty" -u "elastic:${ELASTIC_PASSWORD}" --cacert "$es_ca_cert" -H 'Content-Type: application/json' -d'
+{
+  "description": "Parsing for ctfd submission logs",
+  "processors": [
+    {
+      "set": {
+        "field": "event.ingested",
+        "copy_from": "_ingest.timestamp"
+      }
+    },
+    {
+      "grok": {
+        "field": "message",
+        "patterns": [
+          "^\\[%{DATESTAMP:datestamp}\\] %{DATA:user} submitted b'%{DATA:flag}' on %{NUMBER:challengeNo} with kpm %{NUMBER:tries} \\[%{DATA:result}\\]"
+        ]
+      }
+    },
+    {
+      "set": {
+        "field": "event.dataset",
+        "value": "ctfdsubmission"
+      }
+    }
+  ],
+  "on_failure": [
+    {
+      "set": {
+        "field": "error.message",
+        "value": "{{ _ingest.on_failure_message }}"
+      }
+    }
+  ]
+}
+'
+
+curl -X PUT "https://@elasticsearch:9200/_ingest/pipeline/ctfd.registrations?pretty" -u "elastic:${ELASTIC_PASSWORD}" --cacert "$es_ca_cert" -H 'Content-Type: application/json' -d'
+{
+  "description": "Parsing for ctfd registration logs",
+  "processors": [
+    {
+      "set": {
+        "field": "event.ingested",
+        "copy_from": "_ingest.timestamp"
+      }
+    },
+    {
+      "grok": {
+        "field": "message",
+        "patterns": [
+          "^\\[%{DATESTAMP:datestamp}\\] %{IP:source} - %{DATA:user} registered with %{DATA:email}$"
+        ]
+      }
+    },
+    {
+      "set": {
+        "field": "event.dataset",
+        "value": "ctfd.registrations"
+      }
+    }
+  ],
+  "on_failure": [
+    {
+      "set": {
+        "field": "error.message",
+        "value": "{{ _ingest.on_failure_message }}"
+      }
+    }
+  ]
+}
+'
