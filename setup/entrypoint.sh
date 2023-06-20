@@ -53,6 +53,18 @@ pipeline_files=(
 )
 
 # --------------------------------------------------------
+# pfELK templates declarations
+
+declare -A pfelk_templates
+pfelk_templates=(
+	[pfelk-mappings-ecs]='_component_template'
+	[pfelk-ilm]='_ilm/policy'
+	[pfelk]='_index_template'
+	[pfelk-dhcp]='_index_template'
+	[pfelk-suricata]='_index_template'
+)
+
+# --------------------------------------------------------
 
 
 log 'Waiting for availability of Elasticsearch. This can take several minutes.'
@@ -131,18 +143,35 @@ for user in "${!users_passwords[@]}"; do
 done
 
 # Add in ingest pipelines
-log 'Adding Ingest pipelines'
+log 'Adding ingest pipelines'
 
 for pipeline in "${!pipeline_files[@]}"; do
 	log "Pipeline '$pipeline'"
 
 	declare body_file2
 	body_file2="${BASH_SOURCE[0]%/*}/pipelines/${pipeline_files[$pipeline]:-}"
-	if [[ ! -f "${body_file:-}" ]]; then
+	if [[ ! -f "${body_file2:-}" ]]; then
 		sublog "No pipeline body found at '${body_file2}', skipping"
 		continue
 	fi
 
 	sublog 'Creating'
 	add_pipeline "$pipeline" "$(<"${body_file2}")"
+done
+
+# Add pfelk templates
+log 'Adding pfelk templates'
+
+for template in "${!pfelk_templates[@]}"; do
+	log "Template '$template'"
+
+	declare body_file3
+	body_file3="${BASH_SOURCE[0]%/*}/pipelines/${template}.json"
+	if [[ ! -f "${body_file3:-}" ]]; then
+		sublog "No pipeline body found at '${body_file3}', skipping"
+		continue
+	fi
+
+	sublog 'Creating'
+	install_pfelk "$template" "$(<"${body_file3}")" "${pfelk_templates[$template]:-}"
 done
