@@ -1,4 +1,4 @@
-![image](https://github.com/Weijo/mini-elk/assets/39800664/56dcb63f-c1a8-4ea9-9244-fef285fb2c86)# Requirements
+# Requirements
 Mini-elk was tested on Ubuntu 23.04 (Live and destkop)
 
 You need make, docker and docker-compose. Docker has to have the docker-init plugin
