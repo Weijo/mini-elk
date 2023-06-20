@@ -5,7 +5,7 @@
     "settings": {
       "index": {
         "lifecycle": {
-          "name": "pfelk"
+          "name": "pfelk-ilm"
         }
       }
     },
