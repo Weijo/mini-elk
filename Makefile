@@ -1,5 +1,5 @@
 set:
-	sudo docker compose up setup
+	sudo docker compose up setup --force-recreate
 
 certs:
 	sudo docker compose up tls
