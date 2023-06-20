@@ -49,6 +49,7 @@ pipeline_files=(
 	[kali.commandhistory]='kali_commandhistory.json'
 	[ctfd.submissions]='ctfd_submissions.json'
 	[ctfd.registrations]='ctfd_registrations.json'
+	[ctfd.logins]='ctfd_logins.json'
 )
 
 # --------------------------------------------------------
