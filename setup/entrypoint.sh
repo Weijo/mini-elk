@@ -166,7 +166,7 @@ for template in "${!pfelk_templates[@]}"; do
 	log "Template '$template'"
 
 	declare body_file3
-	body_file3="${BASH_SOURCE[0]%/*}/pipelines/${template}.json"
+	body_file3="${BASH_SOURCE[0]%/*}/pfelk_templates/${template}.json"
 	if [[ ! -f "${body_file3:-}" ]]; then
 		sublog "No pipeline body found at '${body_file3}', skipping"
 		continue
