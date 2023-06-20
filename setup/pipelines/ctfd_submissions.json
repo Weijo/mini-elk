@@ -1,0 +1,33 @@
+{
+  "description": "Parsing for ctfd submission logs",
+  "processors": [
+    {
+      "set": {
+        "field": "event.ingested",
+        "copy_from": "_ingest.timestamp"
+      }
+    },
+    {
+      "grok": {
+        "field": "message",
+        "patterns": [
+          "^\\[%{DATESTAMP:datestamp}\\] %{DATA:user} submitted b'%{DATA:flag}' on %{NUMBER:challengeNo} with kpm %{NUMBER:tries} \\[%{DATA:result}\\]"
+        ]
+      }
+    },
+    {
+      "set": {
+        "field": "event.dataset",
+        "value": "ctfdsubmission"
+      }
+    }
+  ],
+  "on_failure": [
+    {
+      "set": {
+        "field": "error.message",
+        "value": "{{ _ingest.on_failure_message }}"
+      }
+    }
+  ]
+}

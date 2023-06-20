@@ -42,6 +42,16 @@ roles_files=(
 )
 
 # --------------------------------------------------------
+# Pipelines declarations
+
+declare -A pipeline_files
+pipeline_files=(
+	[kali.commandhistory]='kali_commandhistory.json'
+	[ctfd.submissions]='ctfd_submissions.json'
+	[ctfd.registrations]='ctfd_registrations.json'
+)
+
+# --------------------------------------------------------
 
 
 log 'Waiting for availability of Elasticsearch. This can take several minutes.'
@@ -122,92 +132,16 @@ done
 # Add in ingest pipelines
 log 'Adding Ingest pipelines'
 
-es_ca_cert="${BASH_SOURCE[0]%/*}"/ca.crt
+for pipeline in "${!pipeline_files[@]}"; do
+	log "Pipeline '$pipeline'"
 
-curl -X PUT "https://elasticsearch:9200/_ingest/pipeline/kali.commandhistory?pretty" -u "elastic:${ELASTIC_PASSWORD}" --cacert "$es_ca_cert" -H 'Content-Type: application/json' -d'
-{
-  "description": "Parsing for kali logs",
-  "processors": [
-    {
-      "grok": {
-        "field": "message",
-        "patterns": [
-          "%{TIMESTAMP_ISO8601:timestamp} %{DATA:name1} %{DATA:name2}: {\"user\": \"%{DATA:users}\", \"path\": \"%{DATA:path}\", \"pid\": \"%{NUMBER:pid}\",\"original_command\": \"%{DATA:original_command}\", \"status\": \"%{NUMBER:status}\"}"
-        ]
-      }
-    }
-  ]
-}
-'
+	declare body_file2
+	body_file2="${BASH_SOURCE[0]%/*}/pipelines/${pipeline_files[$pipeline]:-}"
+	if [[ ! -f "${body_file:-}" ]]; then
+		sublog "No pipeline body found at '${body_file2}', skipping"
+		continue
+	fi
 
-curl -X PUT "https://elasticsearch:9200/_ingest/pipeline/ctfd-submission?pretty" -u "elastic:${ELASTIC_PASSWORD}" --cacert "$es_ca_cert" -H 'Content-Type: application/json' -d'
-{
-  "description": "Parsing for ctfd submission logs",
-  "processors": [
-    {
-      "set": {
-        "field": "event.ingested",
-        "copy_from": "_ingest.timestamp"
-      }
-    },
-    {
-      "grok": {
-        "field": "message",
-        "patterns": [
-          "^\\[%{DATESTAMP:datestamp}\\] %{DATA:user} submitted b'%{DATA:flag}' on %{NUMBER:challengeNo} with kpm %{NUMBER:tries} \\[%{DATA:result}\\]"
-        ]
-      }
-    },
-    {
-      "set": {
-        "field": "event.dataset",
-        "value": "ctfdsubmission"
-      }
-    }
-  ],
-  "on_failure": [
-    {
-      "set": {
-        "field": "error.message",
-        "value": "{{ _ingest.on_failure_message }}"
-      }
-    }
-  ]
-}
-'
-
-curl -X PUT "https://@elasticsearch:9200/_ingest/pipeline/ctfd.registrations?pretty" -u "elastic:${ELASTIC_PASSWORD}" --cacert "$es_ca_cert" -H 'Content-Type: application/json' -d'
-{
-  "description": "Parsing for ctfd registration logs",
-  "processors": [
-    {
-      "set": {
-        "field": "event.ingested",
-        "copy_from": "_ingest.timestamp"
-      }
-    },
-    {
-      "grok": {
-        "field": "message",
-        "patterns": [
-          "^\\[%{DATESTAMP:datestamp}\\] %{IP:source} - %{DATA:user} registered with %{DATA:email}$"
-        ]
-      }
-    },
-    {
-      "set": {
-        "field": "event.dataset",
-        "value": "ctfd.registrations"
-      }
-    }
-  ],
-  "on_failure": [
-    {
-      "set": {
-        "field": "error.message",
-        "value": "{{ _ingest.on_failure_message }}"
-      }
-    }
-  ]
-}
-'
+	sublog 'Creating'
+	add_pipeline "$pipeline" "$(<"${body_file2}")"
+done

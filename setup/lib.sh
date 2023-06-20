@@ -248,3 +248,37 @@ function ensure_role {
 
 	return $result
 }
+
+# Adds ingest pipelines
+function add_pipeline {
+	local name=$1
+	local body=$2
+
+	local elasticsearch_host="${ELASTICSEARCH_HOST:-elasticsearch}"
+
+	local -a args=( '-s' '-D-' '-m15' '-w' '%{http_code}'
+		"https://elasticsearch:9200/_ingest/pipeline/${name}?pretty"
+		'--resolve' "elasticsearch:9200:${elasticsearch_host}" '--cacert' "$es_ca_cert"
+		'-X' 'POST'
+		'-H' 'Content-Type: application/json'
+		'-d' "$body"
+		)
+
+	if [[ -n "${ELASTIC_PASSWORD:-}" ]]; then
+		args+=( '-u' "elastic:${ELASTIC_PASSWORD}" )
+	fi
+
+	local -i result=1
+	local output
+
+	output="$(curl "${args[@]}")"
+	if [[ "${output: -3}" -eq 200 ]]; then
+		result=0
+	fi
+
+	if ((result)); then
+		echo -e "\n${output::-3}\n"
+	fi
+
+	return $result
+}

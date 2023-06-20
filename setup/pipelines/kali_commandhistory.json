@@ -1,0 +1,13 @@
+{
+  "description": "Parsing for kali logs",
+  "processors": [
+    {
+      "grok": {
+        "field": "message",
+        "patterns": [
+          "%{TIMESTAMP_ISO8601:timestamp} %{DATA:name1} %{DATA:name2}: {\"user\": \"%{DATA:users}\", \"path\": \"%{DATA:path}\", \"pid\": \"%{NUMBER:pid}\",\"original_command\": \"%{DATA:original_command}\", \"status\": \"%{NUMBER:status}\"}"
+        ]
+      }
+    }
+  ]
+}
