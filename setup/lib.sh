@@ -286,7 +286,7 @@ function add_pipeline {
 # Install pfelk templates
 function install_pfelk {
 	local name=$1
-	local body=$2
+	local filename=$2
 	local address=$3
 
 	local elasticsearch_host="${ELASTICSEARCH_HOST:-elasticsearch}"
@@ -296,7 +296,7 @@ function install_pfelk {
 		'--resolve' "elasticsearch:9200:${elasticsearch_host}" '--cacert' "$es_ca_cert"
 		'-X' 'PUT'
 		'-H' 'Content-Type: application/json'
-		'-d' "$body"
+		'-d' -d "@/${filename}"
 		)
 
 	if [[ -n "${ELASTIC_PASSWORD:-}" ]]; then
