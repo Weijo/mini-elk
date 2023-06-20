@@ -23,5 +23,6 @@ ps:
 prune:
 	sudo docker container prune -f
 	sudo docker volume prune -a -f 
+	sudo docker network prune -f
 
 reset: prune set run
