@@ -259,7 +259,7 @@ function add_pipeline {
 	local -a args=( '-s' '-D-' '-m15' '-w' '%{http_code}'
 		"https://elasticsearch:9200/_ingest/pipeline/${name}?pretty"
 		'--resolve' "elasticsearch:9200:${elasticsearch_host}" '--cacert' "$es_ca_cert"
-		'-X' 'POST'
+		'-X' 'PUT'
 		'-H' 'Content-Type: application/json'
 		'-d' "$body"
 		)
