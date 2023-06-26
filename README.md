@@ -143,6 +143,81 @@ sudo docker exec -it mini-elk-fleet-server-1 /bin/bash
 elastic-agent restart
 ```
 
+# APM agents
+So far I've only done this on the CTFd server which is a flask application.
+
+Edit `requirements.txt` and add in the following:
+```
+elastic-apm[flask]
+```
+
+Now that we have elasticapm library added, edit python file that creates the Flask() app. 
+In this case its the `CTFd/__init__.py` file.
+
+add in the following code
+```python
+from elasticapm.contrib.flask import ElasticAPM
+
+def create_app(config="CTFd.config.Config"):
+    app = CTFdFlask(__name__)
+
+    app.config['ELASTIC_APM'] = {
+          'SERVICE_NAME': 'CTFd',
+          'SECRET_TOKEN': '',
+          'SERVER_URL': 'https://apm-server:8200',
+          'SERVER_CERT': '/opt/CTFd/apm-server.crt'
+    }
+
+    apm = ElasticAPM(app)
+```
+
+The next part is editing the `docker-compose.yml` file to set the dns record for `apm-server`.
+This is set under the `extra_hosts` option
+```yaml
+services:
+  ctfd:
+    build: .
+    user: root
+    restart: always
+    environment:
+      - UPLOAD_FOLDER=/var/uploads
+      - DATABASE_URL=mysql+pymysql://ctfd:ctfd@db/ctfd
+      - REDIS_URL=redis://cache:6379
+      - WORKERS=4
+      - LOG_FOLDER=/var/log/CTFd
+      - ACCESS_LOG=/var/log/CTFd/access.log
+      - ERROR_LOG=/var/log/CTFd/error.log
+      - REVERSE_PROXY=true
+    volumes:
+      - .data/CTFd/logs:/var/log/CTFd
+      - .data/CTFd/uploads:/var/uploads
+      - .:/opt/CTFd:ro
+    depends_on:
+      - db
+    extra_hosts:
+      - "apm-server:192.168.147.144"
+    networks:
+        default:
+        internal:
+```
+
+Now we need to download the apm-server certificate. On the elk stack run
+```
+make fileshare
+```
+
+This should host the certificate files. Now we can do to CTFd server and download the certificate
+```
+wget http://apm-server:8000/apm-server.crt
+```
+
+And finally, build the docker container and we should be alright
+```
+sudo docker compose build
+sudo docker compose up -d
+```
+
+
 # Credits
 - Docker-elk - https://github.com/deviantony/docker-elk
 - pfelk - https://github.com/pfelk/pfelk
