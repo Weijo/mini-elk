@@ -37,3 +37,11 @@ instances:
   ip:
   - 127.0.0.1
   - ::1
+
+- name: package-registry
+  dns:
+  - package-registry
+  - localhost
+  ip:
+  - 127.0.0.1
+  - ::1
