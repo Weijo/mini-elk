@@ -113,8 +113,7 @@ add the elastic vm ip to `/etc/hosts`
 ```
 You will need to transfer the `ca.crt` file to the agent vm. The way I did it is through python http server, run this on elastic vm
 ```
-cd ~/mini-elk/tls/certs/ca
-python3 -m http.server 8000
+make fileshare
 ```
 
 then run the command below, replace the `enrollment-token` and the `certificate-authorities` argument with the **ABSOLUTE** path to your ca.crt
@@ -130,10 +129,6 @@ sudo ./elastic-agent install --url=https://fleet-server:8220 --enrollment-token=
 # Custom logging
 Refer to [Custom-Logging.md](./Custom-Logging.md)
 
-# Credits
-- Docker-elk - https://github.com/deviantony/docker-elk
-- pfelk - https://github.com/pfelk/pfelk
-
 # Fleet dying
 When you turn off the VM and turn it on after a while, you may notice the fleet-server or other agents being dead.
 
@@ -147,5 +142,9 @@ When this happens, try to go into the affected elastic agent server and restart 
 sudo docker exec -it mini-elk-fleet-server-1 /bin/bash
 elastic-agent restart
 ```
+
+# Credits
+- Docker-elk - https://github.com/deviantony/docker-elk
+- pfelk - https://github.com/pfelk/pfelk
 
  
