@@ -30,6 +30,5 @@ reset: prune set run
 fileshare:
 	mkdir -p fileshare
 	cp ./tls/certs/ca/ca.crt ./fileshare/ca.crt
-	cd ./fileshare
-	curl -L -O https://artifacts.elastic.co/downloads/beats/elastic-agent/elastic-agent-8.7.1-linux-x86_64.tar.gz
-	sudo python3 -m http.server 8000
+	curl -L "https://artifacts.elastic.co/downloads/beats/elastic-agent/elastic-agent-8.7.1-linux-x86_64.tar.gz" -o ./fileshare/elastic-agent.tar.gz
+	sudo python3 -m http.server 8000 --directory=./fileshare
