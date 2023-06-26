@@ -81,3 +81,23 @@ pipeline: <your pipeline name>
 Once that is done, you should see your logs being parsed.
 
 I'm not sure if you can set multiple pipelines at once. Its safer to spam a bunch of custom log integrations with their own separate pipelines.
+
+## Custom log list
+
+```
+name: ctfd-submissions
+logpath: /home/ctfd/CTFd/.data/CTFd/logs/submissions.log
+pipeline: ctfd.submissions
+
+name: ctfd-logins
+logpath: /home/ctfd/CTFd/.data/CTFd/logs/logins.log
+pipeline: ctfd.logins
+
+name: ctfd-registrations
+logpath: /home/ctfd/CTFd/.data/CTFd/logs/registrations.log
+pipeline: ctfd.registrations
+
+Apache
+logpath: /home/ctfd/CTFd/.data/CTFd/logs/access.log*
+logpath: /home/ctfd/CTFd/.data/CTFd/logs/error.log*
+```

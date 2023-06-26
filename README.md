@@ -111,16 +111,15 @@ add the elastic vm ip to `/etc/hosts`
 ```
 192.168.147.138 fleet-server elasticsearch
 ```
-You will need to transfer the `ca.crt` file to the agent vm. The way I did it is through python http server, run this on elastic vm
+You will need to transfer the `ca.crt` file to the agent vm. The way I did it is through python http server, run this on elastic vm. This will create 
 ```
-cd ~/mini-elk/tls/certs/ca
-python3 -m http.server 8000
+make fileshare
 ```
 
 then run the command below, replace the `enrollment-token` and the `certificate-authorities` argument with the **ABSOLUTE** path to your ca.crt
 ```
-curl -L -O https://artifacts.elastic.co/downloads/beats/elastic-agent/elastic-agent-8.7.1-linux-x86_64.tar.gz
-tar xzvf elastic-agent-8.7.1-linux-x86_64.tar.gz
+curl -L -O http://fleet-server:8000/elastic-agent.tar.gz
+tar xzvf elastic-agent.tar.gz
 cd elastic-agent-8.7.1-linux-x86_64
 wget http://fleet-server:8000/ca.crt
 caPath=$(pwd)
@@ -129,10 +128,6 @@ sudo ./elastic-agent install --url=https://fleet-server:8220 --enrollment-token=
 
 # Custom logging
 Refer to [Custom-Logging.md](./Custom-Logging.md)
-
-# Credits
-- Docker-elk - https://github.com/deviantony/docker-elk
-- pfelk - https://github.com/pfelk/pfelk
 
 # Fleet dying
 When you turn off the VM and turn it on after a while, you may notice the fleet-server or other agents being dead.
@@ -147,5 +142,9 @@ When this happens, try to go into the affected elastic agent server and restart 
 sudo docker exec -it mini-elk-fleet-server-1 /bin/bash
 elastic-agent restart
 ```
+
+# Credits
+- Docker-elk - https://github.com/deviantony/docker-elk
+- pfelk - https://github.com/pfelk/pfelk
 
  
