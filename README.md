@@ -111,15 +111,15 @@ add the elastic vm ip to `/etc/hosts`
 ```
 192.168.147.138 fleet-server elasticsearch
 ```
-You will need to transfer the `ca.crt` file to the agent vm. The way I did it is through python http server, run this on elastic vm
+You will need to transfer the `ca.crt` file to the agent vm. The way I did it is through python http server, run this on elastic vm. This will create 
 ```
 make fileshare
 ```
 
 then run the command below, replace the `enrollment-token` and the `certificate-authorities` argument with the **ABSOLUTE** path to your ca.crt
 ```
-curl -L -O https://artifacts.elastic.co/downloads/beats/elastic-agent/elastic-agent-8.7.1-linux-x86_64.tar.gz
-tar xzvf elastic-agent-8.7.1-linux-x86_64.tar.gz
+curl -L -O http://fleet-server:8000/elastic-agent.tar.gz
+tar xzvf elastic-agent.tar.gz
 cd elastic-agent-8.7.1-linux-x86_64
 wget http://fleet-server:8000/ca.crt
 caPath=$(pwd)
