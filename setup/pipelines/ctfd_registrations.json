@@ -2,16 +2,10 @@
   "description": "Parsing for ctfd registration logs",
   "processors": [
     {
-      "set": {
-        "field": "event.ingested",
-        "copy_from": "_ingest.timestamp"
-      }
-    },
-    {
       "grok": {
         "field": "message",
         "patterns": [
-          "^\\[%{DATESTAMP:datestamp}\\] %{IP:source} - %{DATA:user} registered with %{DATA:email}$"
+          "^\\[%{DATESTAMP:datestamp}\\] %{IP:source} - %{DATA:ctfd_user} registered with %{DATA:email}$"
         ]
       }
     },
