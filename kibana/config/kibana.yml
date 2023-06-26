@@ -52,6 +52,8 @@ xpack.security.encryptionKey: 9a8a7df9ff4a35cb38a65c15fecfd7ea
 #
 xpack.fleet.agents.fleet_server.hosts: [ https://fleet-server:8220 ]
 
+xpack.fleet.registryUrl: "http://package-registry:8080"
+
 xpack.fleet.outputs:
   - id: fleet-default-output
     name: default

@@ -175,11 +175,33 @@ services:
       timeout: 10s
       retries: 120
 
+  package-registry:
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+      kibana:
+        condition: service_healthy
+    image: docker.elastic.co/package-registry/distribution:${ELASTIC_VERSION}
+    networks:
+      - elk
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "curl -f -L http://127.0.0.1:8080/health",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 120
+
   fleet-server:
     depends_on:
       elasticsearch:
         condition: service_healthy
       kibana:
+        condition: service_healthy
+      package-registry:
         condition: service_healthy
     build:
       context: fleet/
