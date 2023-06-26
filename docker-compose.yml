@@ -163,7 +163,7 @@ services:
     depends_on:
       elasticsearch:
         condition: service_healthy
-    package-registry:
+      package-registry:
         condition: service_healthy
     build:
       context: kibana/
