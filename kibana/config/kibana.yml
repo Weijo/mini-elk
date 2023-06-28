@@ -243,4 +243,27 @@ xpack.fleet.agentPolicies:
       - name: elastic_agent-1
         package:
           name: elastic_agent
+  - name: Preconfigured Policy
+    id: 1
+    namespace: test
+    package_policies:
+      - package:
+          name: system
+        name: System Integration
+        id: preconfigured-system
+        inputs:
+          - type: system/metrics
+            enabled: true
+            vars:
+              - name: system.hostfs
+                value: home/test
+            streams:
+              - data_stream:
+                  dataset: system.core
+                enabled: true
+                vars:
+                  - name: period
+                    value: 20s
+          - type: winlog
+            enabled: false
 
