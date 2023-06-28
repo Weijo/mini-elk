@@ -233,19 +233,19 @@ xpack.fleet.agentPolicies:
       - name: ctfd-submissions
         package:
           name: log
+          version: 1.1.2
         inputs:
-          - type: logfile
+          - type: logs
             enabled: true
             streams:
-              - log:
-                enabled: true,
+              - id: log.log
+                enabled: true
                 vars:
-                  - name: paths
-                    value: "/home/ctfd/CTFd/.data/CTFd/logs/submissions.log"
-                  - name: custom
-                    value: "pipeline: ctfd.submissions"
-                  - name: data_stream.dataset
-                    value: "generic"
+                  paths:
+                    - "/home/ctfd/CTFd/.data/CTFd/logs/submissions.log"
+                  data_stream.dataset: generic
+                  tags: []
+                  custom: "pipeline: ctfd.submissions"
   - name: kali
     id: kali-policy
     description: Static agent policy for the kali instances
