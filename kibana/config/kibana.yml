@@ -244,6 +244,8 @@ xpack.fleet.agentPolicies:
                     value: "/home/ctfd/CTFd/.data/CTFd/logs/submissions.log"
                   - name: custom
                     value: "pipeline: ctfd.submissions"
+                  - name: data_stream.dataset
+                    value: "generic"
   - name: kali
     id: kali-policy
     description: Static agent policy for the kali instances
