@@ -21,6 +21,12 @@
         "field": "event.dataset",
         "value": "ctfd.submission"
       }
+    },
+    {
+      "script": {
+        "lang": "painless",
+        "source": "def mappings = ['1': 'Challenge 1', '2': 'Challenge 2', '3': 'Challenge 3']; ctx.challengeName = mappings.containsKey(ctx.challengeNo) ? mappings[ctx.challengeNo] : 'Unknown';"
+      }
     }
   ],
   "on_failure": [
