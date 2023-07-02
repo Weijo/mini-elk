@@ -20,7 +20,7 @@
     {
       "script": {
         "lang": "painless",
-        "source": "if (ctx.message.contains('logged in')) { ctx.login_type = 'successful login'; } else if ( ctx.message.contains('invalid password')) { ctx.login_type = 'invalid password'} else if ( ctx.message.contains('invalid account information')) { ctx.login_type = 'invalid username' }"
+        "source": "if (ctx.message.contains('logged in')) { ctx.login_type = 'successful login'; } else if ( ctx.message.contains('invalid password')) { ctx.login_type = 'invalid password'} else if ( ctx.message.contains('invalid account information')) { ctx.login_type = 'invalid username' } else { ctx.login_type = 'unknown' }"
       }
     }
   ],
