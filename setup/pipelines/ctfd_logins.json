@@ -14,7 +14,6 @@
     {
       "date": {
         "field": "datestamp",
-        "target_field": "log_timestamp",
         "formats": ["MM/dd/yyyy HH:mm:ss"]
       }
     },
