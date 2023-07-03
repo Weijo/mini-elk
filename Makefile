@@ -27,6 +27,8 @@ prune:
 
 reset: prune set run
 
+up: certs set run
+
 fileshare:
 	mkdir -p fileshare
 	test -f ./fileshare/ca.crt || cp ./tls/certs/ca/ca.crt ./fileshare/ca.crt
