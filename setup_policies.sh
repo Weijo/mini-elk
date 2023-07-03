@@ -34,6 +34,7 @@ function install_integration {
 	
 	output=$(curl --request POST \
 	-s \
+	--write-out "%{http_code}" \
 	--url "https://$KIBANA_HOST:5601/api/fleet/package_policies" \
 	--header 'Content-Type: application/json' \
 	--header 'kbn-xsrf: xxx' \
@@ -42,7 +43,9 @@ function install_integration {
 	--data @$filename
 	)
 
-	echo "$output"
+	if [[ "${output: -3}" -eq 400 ]]; then 
+		suberr "Integration already exists"
+	fi
 }
 
 FILES="./policies/*.json"
