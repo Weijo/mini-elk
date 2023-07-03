@@ -43,11 +43,12 @@ function install_integration {
 	--data @$filename
 	)
 
-	echo "${output: -3}"
-
 	if [[ "${output: -3}" -eq 400 ]]; then 
 		suberr "Integration already exists"
+	elif [[ "${output: -3}" -eq 200 ]]; then 
+		sublog "Integration added"
 	fi
+
 }
 
 FILES="./policies/*.json"
