@@ -1,3 +1,5 @@
+.PHONY: policies
+
 set:
 	sudo docker compose up setup --force-recreate
 
@@ -30,7 +32,7 @@ policies:
 
 reset: prune set run
 
-up: certs set run
+up: certs set run policies
 
 fileshare:
 	mkdir -p fileshare
