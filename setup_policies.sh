@@ -43,6 +43,8 @@ function install_integration {
 	--data @$filename
 	)
 
+	echo "${output: -3}"
+
 	if [[ "${output: -3}" -eq 400 ]]; then 
 		suberr "Integration already exists"
 	fi
