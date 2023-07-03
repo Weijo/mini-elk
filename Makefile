@@ -25,6 +25,9 @@ prune:
 	sudo docker volume prune -a -f 
 	sudo docker network prune -f
 
+policies:
+	bash ./setup_policies.sh
+
 reset: prune set run
 
 up: certs set run
