@@ -1,0 +1,13 @@
+{
+  "description": "Parsing for kali msf command logs",
+  "processors": [
+    {
+      "grok": {
+        "field": "message",
+        "patterns": [
+          "'''%{DATA:msf_command}'''"
+        ]
+      }
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "description": "Parsing for kali logs",
+  "description": "Parsing for kali command logs",
   "processors": [
     {
       "grok": {
