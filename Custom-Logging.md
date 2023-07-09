@@ -68,6 +68,28 @@ with an failure processor
 ]
 ```
 
+### Converting datestamp to timestamp format
+If you have data that looks like `06/26/2023 10:01:05`
+
+You can convert them into kibana's preferred date timestamp `2023-07-02T14:59:02.224691664Z`
+```json
+{
+  "date": {
+    "field": "datestamp",
+    "target_field": "log_timestamp",
+    "formats": ["MM/dd/yyyy HH:mm:ss"]
+  }
+},
+```
+
+### Doing weird scripting
+There's this thing called `painless script` where you can transform the data to add more insights to them.
+
+Some of the things I've done are:
+- Dictionary mapping: refer to `ctfd.submissions`
+- if else checks for different type of log output: refer to `ctfd.logins`
+
+
 ## Creating Custom Integration
 1. Go to fleet > agent policy > select a policy > add integration > select Custom Logs > add custom logs
 2. Write your integration name

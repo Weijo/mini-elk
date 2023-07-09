@@ -46,6 +46,7 @@ roles_files=(
 
 declare -A pipeline_files
 pipeline_files=(
+	[kali.msfcommandhistory]='kali_msfcommandhistory.json'
 	[kali.commandhistory]='kali_commandhistory.json'
 	[ctfd.submissions]='ctfd_submissions.json'
 	[ctfd.registrations]='ctfd_registrations.json'

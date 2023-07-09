@@ -5,8 +5,14 @@
       "grok": {
         "field": "message",
         "patterns": [
-          "^\\[%{DATESTAMP:datestamp}\\] %{IP:source} - %{DATA:ctfd_user} registered with %{DATA:email}$"
+          "^\\[%{DATESTAMP:datestamp}\\] %{IP:client_ip} - %{DATA:ctfd_user} registered with %{DATA:email}$"
         ]
+      }
+    },
+    {
+      "date": {
+        "field": "datestamp",
+        "formats": ["MM/dd/yyyy HH:mm:ss"]
       }
     },
     {

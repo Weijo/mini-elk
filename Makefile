@@ -1,3 +1,5 @@
+.PHONY: policies
+
 set:
 	sudo docker compose up setup --force-recreate
 
@@ -25,10 +27,16 @@ prune:
 	sudo docker volume prune -a -f 
 	sudo docker network prune -f
 
+policies:
+	bash ./setup_policies.sh
+
 reset: prune set run
+
+up: certs set run policies
 
 fileshare:
 	mkdir -p fileshare
 	test -f ./fileshare/ca.crt || cp ./tls/certs/ca/ca.crt ./fileshare/ca.crt
+	test -f ./fileshare/apm-server.crt || cp ./tls/certs/apm-server/apm-server.crt ./fileshare/apm-server.crt
 	test -f ./fileshare/elastic-agent.tar.gz || curl -L "https://artifacts.elastic.co/downloads/beats/elastic-agent/elastic-agent-8.7.1-linux-x86_64.tar.gz" -o ./fileshare/elastic-agent.tar.gz
 	sudo python3 -m http.server 8000 --directory=./fileshare

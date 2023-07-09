@@ -5,14 +5,28 @@
       "grok": {
         "field": "message",
         "patterns": [
-          "\\[%{DATESTAMP:datestamp}] %{IP:source} - %{DATA:ctfd_user} logged in"
+          "\\[%{DATESTAMP:datestamp}] %{IP:client_ip} - %{DATA:ctfd_user} logged in",
+          "\\[%{DATESTAMP:datestamp}] %{IP:client_ip} - submitted invalid password for %{GREEDYDATA:ctfd_user}",
+          "\\[%{DATESTAMP:datestamp}] %{IP:client_ip} - %{GREEDYDATA:action}"
         ]
+      }
+    },
+    {
+      "date": {
+        "field": "datestamp",
+        "formats": ["MM/dd/yyyy HH:mm:ss"]
       }
     },
     {
       "set": {
         "field": "event.dataset",
-        "value": "ctfd.registrations"
+        "value": "ctfd.logins"
+      }
+    },
+    {
+      "script": {
+        "lang": "painless",
+        "source": "if (ctx.message.contains('logged in')) { ctx.login_type = 'successful login'; } else if ( ctx.message.contains('invalid password')) { ctx.login_type = 'invalid password'} else if ( ctx.message.contains('invalid account information')) { ctx.login_type = 'invalid username' } else { ctx.login_type = 'unknown' }"
       }
     }
   ],

@@ -1,0 +1,29 @@
+{
+  "policy_id": "kali-policy",
+  "package": {
+    "name": "log",
+    "version": "1.1.2"
+  },
+  "name": "kalicommandhistory",
+  "namespace": "default",
+  "description": "",
+  "vars": {},
+  "inputs": {
+    "logs-logfile": {
+      "enabled": true,
+      "streams": {
+        "log.log": {
+          "enabled": true,
+          "vars": {
+            "paths": [
+              "/var/log/bash.log*"
+            ],
+            "data_stream.dataset": "kalicommandhistory",
+            "custom": "pipeline: kali.commandhistory",
+            "tags": []
+          }
+        }
+      }
+    }
+  }
+}
