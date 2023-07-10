@@ -159,6 +159,16 @@ add the elastic vm ip to `/etc/hosts`
 ```
 192.168.147.138 fleet-server elasticsearch
 ```
+
+If the elk server is fully up and running, you can run one of the following command
+```
+curl http://fleet-server:8000/scripts/ctfd-policy_file.sh | bash
+curl http://fleet-server:8000/scripts/webserver-policy_file.sh | bash
+curl http://fleet-server:8000/scripts/limesurvey-policy_file.sh | bash
+curl http://fleet-server:8000/scripts/kali-policy_file.sh | bash
+curl http://fleet-server:8000/scripts/corporate-endpoint-policy_file.sh | bash
+```
+
 You will need to transfer the `ca.crt` file to the agent vm. The way I did it is through python http server, run this on elastic vm. This will create 
 ```
 make fileshare
