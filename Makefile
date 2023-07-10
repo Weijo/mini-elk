@@ -44,7 +44,7 @@ scripts:
 
 reset: prune setup run
 
-up: certs setup run policies tranforms savedObjects scripts
+up: certs setup run policies tranforms savedObjects scripts fileshare
 
 fileshare:
 	mkdir -p fileshare
