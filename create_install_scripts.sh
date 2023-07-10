@@ -55,7 +55,7 @@ while IFS=$'\t' read -r policy_id enrollment_token; do
     echo "cd elastic-agent-8.7.1-linux-x86_64" >> "$filename"
     echo "wget http://fleet-server:8000/ca.crt" >> "$filename"
     echo "caPath=\$(pwd)" >> "$filename"
-    echo "sudo ./elastic-agent install --url=https://fleet-server:8220 --enrollment-token=$enrollment_token --certificate-authorities=\$caPath/ca.crt" >> "$filename"
+    echo "sudo ./elastic-agent install --url=https://fleet-server:8220 --enrollment-token=$enrollment_token --certificate-authorities=\$caPath/ca.crt -f" >> "$filename"
     
     # Make the file executable
     chmod +x "$filename"
