@@ -5,7 +5,7 @@ if [ -f .env ]; then
 	export $(echo $(cat .env | sed 's/#.*//g'| xargs) | envsubst)
 fi
 
-ELASTIC_HOST="127.0.0.1"
+KIBANA_HOST="127.0.0.1"
 
 # Log a message.
 function log {
@@ -27,32 +27,31 @@ function suberr {
 	echo "   ⠍ $1" >&2
 }
 
-function install_transforms {
+function install_savedobjects {
 	local filename=$1
-    local transform_name=$(basename "$filename" .json)
 	local output
-	
-	output=$(curl --request PUT \
+    # curl -X POST https://192.168.147.144:5601/api/saved_objects/_import -H "kbn-xsrf: true" --form file=@./savedObjects/suricata.ndjson -u elastic:changeme -k
+	output=$(curl --request POST \
 	-s \
 	--write-out "%{http_code}" \
-	--url "https://$ELASTIC_HOST:9200/_transform/$transform_name" \
-	--header 'Content-Type: application/json' \
+	--url "https://$KIBANA_HOST:5601/api/saved_objects/_import" \
+    --header "kbn-xsrf: true" \
+    --form file=@$filename \
 	-k \
-	-u elastic:$ELASTIC_PASSWORD \
-	--data @$filename
+	-u elastic:$ELASTIC_PASSWORD
 	)
 
 	if [[ "${output: -3}" -eq 400 ]]; then 
-		suberr "Transform already exists"
+		suberr "Saved Object already exists"
 	elif [[ "${output: -3}" -eq 200 ]]; then 
-		sublog "Transform added"
+		sublog "Saved Object added"
 	fi
 
 }
 
-FILES="./transforms/*.json"
+FILES="./savedObjects/*.ndjson"
 for f in $FILES
 do
 	log "Adding $f"
-	install_transforms $f
+	install_savedobjects $f
 done
