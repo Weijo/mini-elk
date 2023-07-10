@@ -1,0 +1,69 @@
+{
+  "source": {
+    "index": [
+      "logs-*"
+    ],
+    "query": {
+      "bool": {
+        "filter": [
+          {
+            "bool": {
+              "filter": [
+                {
+                  "bool": {
+                    "should": [
+                      {
+                        "term": {
+                          "event.dataset": {
+                            "value": "ctfd.submission"
+                          }
+                        }
+                      }
+                    ],
+                    "minimum_should_match": 1
+                  }
+                },
+                {
+                  "bool": {
+                    "should": [
+                      {
+                        "term": {
+                          "result": {
+                            "value": "CORRECT"
+                          }
+                        }
+                      }
+                    ],
+                    "minimum_should_match": 1
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  },
+  "dest": {
+    "index": "ctfd_correct_submissions_allone"
+  },
+  "pivot": {
+    "group_by": {
+      "ctfd_user": {
+        "terms": {
+          "field": "ctfd_user"
+        }
+      }
+    },
+    "aggregations": {
+      "test": {
+        "scripted_metric": {
+          "init_script": "def dictionary = new HashMap(); state.dictionary = dictionary;",
+          "map_script": "def user = doc['ctfd_user'].value; def timestamp = doc['@timestamp'].value.millis; if (!state.dictionary.containsKey(user)) { def array = [timestamp, [timestamp], [0]]; state.dictionary.put(user, array); } else { def array = state.dictionary.get(user); array[2].add(timestamp - array[0]); array[0] = Math.max(timestamp, array[0]); array[1].add(timestamp); }",
+          "combine_script": "return state;",
+          "reduce_script": "def result = [:]; for (state in states) { for (entry in state.dictionary.entrySet()) { def user = entry.getKey(); def array = entry.getValue(); def allTimestamps = array[1]; def timeDifferences = array[2]; for (int i = 0; i < allTimestamps.size(); i++) { def timeStart = allTimestamps[i]; def timeEnd = i < allTimestamps.size() - 1 ? allTimestamps[i + 1] : null; def timeTakenMillis = i < timeDifferences.size() - 1 ? timeDifferences[i + 1] : null; def formatter = DateTimeFormatter.ofPattern('MM/dd/yyyy HH:mm:ss'); def formattedTimeStart = Instant.ofEpochMilli(timeStart).atZone(ZoneId.systemDefault()).format(formatter); def formattedTimeEnd = timeEnd != null ? Instant.ofEpochMilli(timeEnd).atZone(ZoneId.systemDefault()).format(formatter) : ''; def timeTaken = ''; if (timeTakenMillis != null) { def seconds = Math.floor((timeTakenMillis / 1000) % 60); def minutes = Math.floor((timeTakenMillis / (1000 * 60)) % 60); def hours = Math.floor((timeTakenMillis / (1000 * 60 * 60)) % 24); timeTaken = (hours > 0 ? hours + ' hours ' : '') + (minutes > 0 ? minutes + ' minutes ' : '') + seconds + ' seconds'; } def phase_start_name = 'phase_' + i + '_start'; def phase_end_name = 'phase_' + i + '_end'; def phase_time_taken_name = 'phase_' + i + '_time_taken'; result[phase_start_name] = formattedTimeStart; result[phase_end_name] = formattedTimeEnd; result[phase_time_taken_name] = timeTaken; } } } return result;"
+        }
+      }
+    }
+  }
+}
