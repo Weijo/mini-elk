@@ -43,9 +43,9 @@ server.ssl.key: config/kibana.key
 #xpack.security.encryptionKey:
 #xpack.encryptedSavedObjects.encryptionKey:
 #xpack.reporting.encryptionKey:
-xpack.encryptedSavedObjects.encryptionKey: 602c064273ba017b7abfa83e01b4213b
-xpack.reporting.encryptionKey: 1f13143bae00291ed7873bcbadcdc30a
-xpack.security.encryptionKey: 9a8a7df9ff4a35cb38a65c15fecfd7ea
+xpack.encryptedSavedObjects.encryptionKey: PLEASEREPLACEMESAVEOBJECT
+xpack.reporting.encryptionKey: PLEASEREPLACEMEREPORTING
+xpack.security.encryptionKey: PLEASEREPLACEMESECURITY
 
 ## Fleet
 ## https://www.elastic.co/guide/en/kibana/current/fleet-settings-kb.html

@@ -6,7 +6,9 @@ set:
 certs:
 	sudo docker compose up tls
 	sed -i "s?PLEASEDONTREPLACEMEIHAVEABANDONMENTISSUES?`openssl x509 -fingerprint -sha256 -noout -in tls/certs/ca/ca.crt | cut -d '=' -f2 | tr -d ':' | tr '[:upper:]' '[:lower:]'`?" ./kibana/config/kibana.yml
-
+	sed -i "s?PLEASEREPLACEMESAVEOBJECT?`openssl rand -base64 40 | tr -d "=+/" | cut -c1-32`?" ./kibana/config/kibana.yml
+	sed -i "s?PLEASEREPLACEMEREPORTING?`openssl rand -base64 40 | tr -d "=+/" | cut -c1-32`?" ./kibana/config/kibana.yml
+	sed -i "s?PLEASEREPLACEMESECURITY?`openssl rand -base64 40 | tr -d "=+/" | cut -c1-32`?" ./kibana/config/kibana.yml
 test:
 	sudo docker compose -f docker-compose.yml up
 
