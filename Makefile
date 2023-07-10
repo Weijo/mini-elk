@@ -1,6 +1,6 @@
-.PHONY: policies
+.PHONY: setup policies savedObjects tranforms
 
-set:
+setup:
 	sudo docker compose up setup --force-recreate
 
 certs:
@@ -32,9 +32,15 @@ prune:
 policies:
 	bash ./setup_policies.sh
 
-reset: prune set run
+savedObjects:
+	bash ./setup_savedobjects.sh
 
-up: certs set run policies
+tranforms:
+	bash ./setup_transforms.sh
+
+reset: prune setup run
+
+up: certs setup run policies tranforms savedObjects
 
 fileshare:
 	mkdir -p fileshare
