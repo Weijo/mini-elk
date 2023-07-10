@@ -1,5 +1,5 @@
 # Requirements
-Mini-elk was tested on Ubuntu 23.04 (Live and destkop)
+Mini-elk was tested on Ubuntu 23.04 (Live and desktop)
 
 You need make, docker and docker-compose. Docker has to have the docker-init plugin
 ```
@@ -52,41 +52,75 @@ sudo apt-get install make -y
 # Localised ELK setup
 I placed the various docker commands into a [Makefile](./Makefile)
 
-First time setup requires you to generate the TLS certifications
+you can set everything up in one command
+```
+make up
+```
+
+## Commands
+`certs` will generate the TLS certs and replace the SHA256 sum to the `kibana.yml`. It will also generate the encryption keys for `kibana.yml`
 ```
 make certs
 ```
-This will output the SHA fingerprint, edit `kibana/config/kibana.yml`, find `ca_trusted_fingerprint` and replace the SHA fingerprint there
 
-First time running or after a `docker volume prune` or if you edited `.env` file to change the passwords run this
+`setup` will run the `setup` docker container which will set up the passwords, and add ingest pipelines and index templates.
+use this after a `docker volume prune` or if you edited `.env` file to change the passwords run this
 ```
-make set
+make setup
 ```
 
-Run the server as daemon
+`run` will run the server as daemon
 ```
 make run
 ```
 
-Run the server without daemon (for testing)
+`test` will run the server without daemon (for testing)
 ```
 make test
 ```
 
-Check docker ps
+`ps` will run docker compose ps
 ```
 make ps
 ```
 
-Regenerate the xpack encryption keys when used in production as they're shown publically. The keys are needed for Elastic security Alerts to load/work
-```bash
-sudo docker container run --rm docker.elastic.co/kibana/kibana:8.7.1 bin/kibana-encryption-keys generate
+`down` will run docker compose down
+```
+make down
 ```
 
-If your fleet server is not alive, you can try pruning the containers and volumes then run `set` and `run` again 
-```bash
+`build` will run docker compose build
+```
+make build
+```
+
+`prune` will forcefully remove existing volumes, networks and containers
+```
+make prune
+```
+
+`policies`, `savedObjects`, `tranforms` will run respective setup scripts: `setup_policies.sh`, `setup_savedobjects.sh`, `setup_transforms.sh`
+```
+make policies
+make savedObjects
+make tranforms
+```
+
+`scripts` will curl the fleet api for the enrollment tokens and create installation scripts in the fileshare server
+```
+make scripts
+```
+
+`reset` runs `prune`,`setup` and `run`
+```
 make reset
 ```
+
+`fileshare` sets up the fileshare to distribute the certificates and elastic agent
+```
+make fileshare
+```
+
 # Fleet setup
 Fleet should automatically set up by itself. 
 
@@ -97,13 +131,27 @@ Click on `Add output` > choose a name > type: elasticsearch (for now) > Host: `h
 
 Note that every agent policy you create needs to specify the fleet server and output setting for it to work.
 
+# Fleet dying
+When you turn off the VM and turn it on after a while, you may notice the fleet-server or other agents being dead.
+
+Checking the logs will show something like this:
+```
+"message":"Error fetching data for metricset beat.state: error making http request: Get "http://unix/state/": dial unix /usr/share/elastic-agent/state/data/tmp/fleet-server-default.sock: connect: no such file or directory"
+```
+
+When this happens, try to go into the affected elastic agent server and restart elastic-agent. E.g
+```
+sudo docker exec -it mini-elk-fleet-server-1 /bin/bash
+elastic-agent restart
+```
+
 # Agent policies
 You can either add them manually through the UI or hardcode into `kibana.yml`, I found the integration names [here](https://epr.elastic.co/search)
 
 Writing the policies is really hard as there are barely any examples but if you search for `manifest.yml` in `elastic/integration` repo there are some examples you can follow
 https://github.com/search?q=repo%3Aelastic%2Fintegrations+manifest.yml&type=code
 
-That being said, I have no idea how to set up specific configurations
+That being said, its better to use the preview API and write your own script to add the integration like what I did in `setup_policies.sh`
 
 # Enrolling agents
 add the elastic vm ip to `/etc/hosts`
@@ -128,20 +176,6 @@ sudo ./elastic-agent install --url=https://fleet-server:8220 --enrollment-token=
 
 # Custom logging
 Refer to [Custom-Logging.md](./Custom-Logging.md)
-
-# Fleet dying
-When you turn off the VM and turn it on after a while, you may notice the fleet-server or other agents being dead.
-
-Checking the logs will show something like this:
-```
-"message":"Error fetching data for metricset beat.state: error making http request: Get "http://unix/state/": dial unix /usr/share/elastic-agent/state/data/tmp/fleet-server-default.sock: connect: no such file or directory"
-```
-
-When this happens, try to go into the affected elastic agent server and restart elastic-agent. E.g
-```
-sudo docker exec -it mini-elk-fleet-server-1 /bin/bash
-elastic-agent restart
-```
 
 # APM agents
 So far I've only done this on the CTFd server which is a flask application.
@@ -221,5 +255,3 @@ sudo docker compose up -d
 # Credits
 - Docker-elk - https://github.com/deviantony/docker-elk
 - pfelk - https://github.com/pfelk/pfelk
-
- 

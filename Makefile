@@ -9,6 +9,7 @@ certs:
 	sed -i "s?PLEASEREPLACEMESAVEOBJECT?`openssl rand -base64 40 | tr -d "=+/" | cut -c1-32`?" ./kibana/config/kibana.yml
 	sed -i "s?PLEASEREPLACEMEREPORTING?`openssl rand -base64 40 | tr -d "=+/" | cut -c1-32`?" ./kibana/config/kibana.yml
 	sed -i "s?PLEASEREPLACEMESECURITY?`openssl rand -base64 40 | tr -d "=+/" | cut -c1-32`?" ./kibana/config/kibana.yml
+
 test:
 	sudo docker compose -f docker-compose.yml up
 
@@ -38,9 +39,12 @@ savedObjects:
 tranforms:
 	bash ./setup_transforms.sh
 
+scripts:
+	bash ./create_install_scripts.sh
+
 reset: prune setup run
 
-up: certs setup run policies tranforms savedObjects
+up: certs setup run policies tranforms savedObjects scripts
 
 fileshare:
 	mkdir -p fileshare
