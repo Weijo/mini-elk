@@ -1,4 +1,4 @@
-.PHONY: setup policies savedObjects tranforms
+.PHONY: setup policies savedObjects tranforms fileshare
 
 setup:
 	sudo docker compose up setup --force-recreate
