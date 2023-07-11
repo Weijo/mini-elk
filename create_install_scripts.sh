@@ -28,6 +28,10 @@ function suberr {
 KIBANA_HOST="192.168.147.144"
 
 # Create the scripts directory in fileshare
+if [[ -d "./fileshare/scripts" ]]; then
+    rm -rf ./fileshare/scripts
+fi
+
 mkdir -p "./fileshare/scripts"
 
 # Make the API request and capture the response
@@ -62,7 +66,7 @@ while IFS=$'\t' read -r policy_id enrollment_token; do
     sublog "Created Linux script: $linux_scriptname"
     
     # Windows script
-    echo "\$ProgressPreference = 'SilentlyContinue'" >> "$windows_scriptname"
+    echo "\$ProgressPreference = 'SilentlyContinue'" > "$windows_scriptname"
     echo "Invoke-WebRequest -Uri http://fleet-server:8000/elastic-agent-windows.zip -OutFile elastic-agent-windows.zip" >> "$windows_scriptname"
     echo "Expand-Archive .\elastic-agent-windows.zip -DestinationPath ." >> "$windows_scriptname"
     echo "cd elastic-agent-8.7.1-windows-x86_64" >> "$windows_scriptname"
