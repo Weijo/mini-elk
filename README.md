@@ -168,7 +168,7 @@ curl http://fleet-server:8000/scripts/limesurvey-policy_linux.sh | bash
 curl http://fleet-server:8000/scripts/kali-policy_linux.sh | bash
 ```
 
-For windows
+For windows, open powershell as administrator
 ```
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 Invoke-WebRequest -Uri 'http://fleet-server:8000/scripts/corporate-endpoint-policy_windows.sh' -OutFile 'script.sh'; .\script.sh
