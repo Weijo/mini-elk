@@ -50,5 +50,6 @@ fileshare:
 	mkdir -p fileshare
 	test -f ./fileshare/ca.crt || cp ./tls/certs/ca/ca.crt ./fileshare/ca.crt
 	test -f ./fileshare/apm-server.crt || cp ./tls/certs/apm-server/apm-server.crt ./fileshare/apm-server.crt
-	test -f ./fileshare/elastic-agent.tar.gz || curl -L "https://artifacts.elastic.co/downloads/beats/elastic-agent/elastic-agent-8.7.1-linux-x86_64.tar.gz" -o ./fileshare/elastic-agent.tar.gz
+	test -f ./fileshare/elastic-agent-linux.tar.gz || curl -L "https://artifacts.elastic.co/downloads/beats/elastic-agent/elastic-agent-8.7.1-linux-x86_64.tar.gz" -o ./fileshare/elastic-agent-linux.tar.gz
+	test -f ./fileshare/elastic-agent-windows.zip || curl -L "https://artifacts.elastic.co/downloads/beats/elastic-agent/elastic-agent-8.7.1-windows-x86_64.zip" -o ./fileshare/elastic-agent-windows.zip
 	sudo python3 -m http.server 8000 --directory=./fileshare
