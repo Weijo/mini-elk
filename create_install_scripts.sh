@@ -45,7 +45,7 @@ policies=$(echo "$response" | jq -r '.list[] | [.policy_id, .api_key] | @tsv')
 # Loop through the policies and print the policy ID and enrollment token
 while IFS=$'\t' read -r policy_id enrollment_token; do
     linux_scriptname="./fileshare/scripts/${policy_id}_linux.sh"
-    windows_scriptname="./fileshare/scripts/${policy_id}_windows.sh"
+    windows_scriptname="./fileshare/scripts/${policy_id}_windows.ps1"
 
     # Create the file for each policy ID
     log "Creating scripts for policy: $policy_id"
