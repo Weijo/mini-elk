@@ -59,7 +59,7 @@ while IFS=$'\t' read -r policy_id enrollment_token; do
     echo "wget http://fleet-server:8000/ca.crt" >> "$linux_scriptname"
     echo "caPath=\$(pwd)" >> "$linux_scriptname"
     echo "sudo ./elastic-agent install --url=https://fleet-server:8220 --enrollment-token=$enrollment_token --certificate-authorities=\$caPath/ca.crt -f" >> "$linux_scriptname"
-    echo "Created Linux script: $linux_scriptname"
+    sublog "Created Linux script: $linux_scriptname"
     
     # Windows script
     echo echo "\$url = 'http://fleet-server:8000/elastic-agent-windows.zip'" > "$windows_scriptname"
@@ -70,10 +70,10 @@ while IFS=$'\t' read -r policy_id enrollment_token; do
     echo "Invoke-WebRequest -Uri 'http://fleet-server:8000/ca.crt' -OutFile .\ca.crt" >> "$windows_scriptname"
     echo "\$caPath = (Get-Location).Path" >> "$windows_scriptname"
     echo ".\elastic-agent.exe install --url=https://fleet-server:8220 --enrollment-token=$enrollment_token --certificate-authorities=\$caPath\ca.crt -f" >> "$windows_scriptname"
-    echo "Created Windows script: $windows_scriptname"
+    sublog "Created Windows script: $windows_scriptname"
 
     # Make the file executable
-    chmod +x "$filename"
+    chmod +x "$linux_scriptname"
+    chmod +x "$windows_scriptname"
     
-    sublog "Created file: $filename"
 done <<< "$policies"
