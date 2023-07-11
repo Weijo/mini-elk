@@ -162,11 +162,18 @@ add the elastic vm ip to `/etc/hosts`
 
 If the elk server is fully up and running, you can run one of the following command
 ```
-curl http://fleet-server:8000/scripts/ctfd-policy_file.sh | bash
-curl http://fleet-server:8000/scripts/webserver-policy_file.sh | bash
-curl http://fleet-server:8000/scripts/limesurvey-policy_file.sh | bash
-curl http://fleet-server:8000/scripts/kali-policy_file.sh | bash
-curl http://fleet-server:8000/scripts/corporate-endpoint-policy_file.sh | bash
+curl http://fleet-server:8000/scripts/ctfd-policy_linux.sh | bash
+curl http://fleet-server:8000/scripts/webserver-policy_linux.sh | bash
+curl http://fleet-server:8000/scripts/limesurvey-policy_linux.sh | bash
+curl http://fleet-server:8000/scripts/kali-policy_linux.sh | bash
+```
+
+For windows
+```
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+Invoke-WebRequest -Uri 'http://fleet-server:8000/scripts/corporate-endpoint-policy_windows.sh' -OutFile 'script.sh'; .\script.sh
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Restricted
+rm .\script.sh
 ```
 
 You will need to transfer the `ca.crt` file to the agent vm. The way I did it is through python http server, run this on elastic vm. This will create 
