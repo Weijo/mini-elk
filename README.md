@@ -173,7 +173,7 @@ For windows, open powershell as administrator
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 Invoke-WebRequest -Uri 'http://fleet-server:8000/scripts/corporate-endpoint-policy_windows.ps1' -OutFile 'script.ps1'; .\script.ps1
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Restricted
-rm .\script.ps1
+rm ..\script.ps1
 ```
 
 You will need to transfer the `ca.crt` file to the agent vm. The way I did it is through python http server, run this on elastic vm. This will create 
