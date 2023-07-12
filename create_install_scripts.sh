@@ -57,8 +57,8 @@ while IFS=$'\t' read -r policy_id enrollment_token; do
     # Linux script
     echo "#!/bin/bash" > "$linux_scriptname"
     echo "" >> "$linux_scriptname"
-    echo "curl -L -O http://fleet-server:8000/elastic-agent.tar.gz" >> "$linux_scriptname"
-    echo "tar xzvf elastic-agent.tar.gz" >> "$linux_scriptname"
+    echo "curl -L -O http://fleet-server:8000/elastic-agent-linux.tar.gz" >> "$linux_scriptname"
+    echo "tar xzvf elastic-agent-linux.tar.gz" >> "$linux_scriptname"
     echo "cd elastic-agent-8.7.1-linux-x86_64" >> "$linux_scriptname"
     echo "wget http://fleet-server:8000/ca.crt" >> "$linux_scriptname"
     echo "caPath=\$(pwd)" >> "$linux_scriptname"
