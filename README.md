@@ -272,3 +272,4 @@ sudo docker compose up -d
 # Credits
 - Docker-elk - https://github.com/deviantony/docker-elk
 - pfelk - https://github.com/pfelk/pfelk
+- deploy elastic script - https://github.com/jlim0930/scripts/blob/master/deploy-elastic.sh
